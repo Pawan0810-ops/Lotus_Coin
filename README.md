@@ -1,11 +1,25 @@
-# 🌸 Lotus Coin (LOTUS)
+# 🌸 Lotus Coin (`LOTUS`)
 
-> **A High-Performance C++ Cryptocurrency Engine**
+**A High-Performance, Hybrid PoW/PoS Modular C++ Cryptocurrency Engine**
 
-## Features
-- OpenSSL 3.0 secp256k1 Cryptography
-- LevelDB Storage Engine
-- POSIX P2P Socket Networking
-- PoW/PoS Hybrid Consensus
-- Dynamic Difficulty Adjustment
-- BIP-39 Mnemonic Wallet Engine
+---
+
+## 📸 System Architecture
+
+```text
+       +-----------------------------------------------------------------------+
+       |                           LOTUS COIN NODE                             |
+       |                                                                       |
+       |  +------------------+   +-------------------+   +------------------+  |
+       |  |  HTTP REST API   |   |   P2P SERVER      |   |  LEVELDB ENGINE  |  |
+       |  |   (Port 8080)    |   |   (Port 9333)     |   |   (Disk Ledger)  |  |
+       |  +--------+---------+   +---------+---------+   +--------+---------+  |
+       |           |                       |                      |            |
+       |           v                       v                      v            |
+       |  +-------------------------------------------------------------+      |
+       |  |                  LOTUS NETWORK CORE STATE                   |      |
+       |  |  [Mempool Priority Queue]  --> [PoS Validator Check]        |      |
+       |  |  [PoW Miner Engine]        --> [Dynamic Target Adjuster]    |      |
+       |  |  [Slashing & Treasury Pool] --> [Longest Chain Fork Sync]   |      |
+       |  +-------------------------------------------------------------+      |
+       +-----------------------------------------------------------------------+
