@@ -1,0 +1,8 @@
+build/
+lotus_chaindata_*
+wallet.json
+*.o
+*.a
+lotus_node
+.vscode/
+.DS_Store
