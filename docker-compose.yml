@@ -1,0 +1,18 @@
+services:
+  node1:
+    build: .
+    container_name: lotus_node_1
+    network_mode: "host"
+    command: ["./build/lotus_node", "8080", "9333", "9334", "./lotus_chaindata_1"]
+    restart: always
+
+  node2:
+    build: .
+    container_name: lotus_node_2
+    network_mode: "host"
+    command: ["./build/lotus_node", "8081", "9334", "9333", "./lotus_chaindata_2"]
+    restart: always
+
+volumes:
+  chaindata1:
+  chaindata2:

@@ -1,0 +1,5 @@
+build/
+lotus_chaindata_*
+wallet.json
+.git/
+.vscode/
