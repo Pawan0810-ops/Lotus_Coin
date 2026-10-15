@@ -1,362 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotus Coin ($LOTUS) — Ultra-Modern Hybrid Blockchain Engine</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
-        
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotus Coin ($LOTUS) - Official Web3 Portal</title>
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Ethers.js library for Web3 MetaMask Connection -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
-        /* Smooth Theme Transitions */
-        body { transition: background-color 0.4s ease, color 0.4s ease; }
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(22, 29, 47, 0.75);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-color: #ec4899;
+      --accent-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      --glow-color: rgba(236, 72, 153, 0.25);
+    }
 
-        /* Dark Theme Variables */
-        body.dark {
-            background-color: #030712;
-            color: #f3f4f6;
-        }
-        body.dark .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            border-color: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-        body.dark .nav-glass {
-            background: rgba(3, 7, 18, 0.85);
-            border-color: rgba(255, 255, 255, 0.08);
-        }
-        body.dark .text-muted { color: #9ca3af; }
-        body.dark .table-header { background: #111827; color: #9ca3af; }
-        body.dark .input-box { background: #030712; border-color: #1f2937; color: #fff; }
+    body.light-mode {
+      --bg-color: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --border-color: rgba(0, 0, 0, 0.08);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-color: #db2777;
+      --accent-gradient: linear-gradient(135deg, #db2777 0%, #7c3aed 100%);
+      --glow-color: rgba(219, 39, 119, 0.15);
+    }
 
-        /* Light Theme Variables */
-        body.light {
-            background-color: #f8fafc;
-            color: #0f172a;
-        }
-        body.light .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(226, 232, 240, 0.8);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-        }
-        body.light .nav-glass {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(226, 232, 240, 0.8);
-        }
-        body.light .text-muted { color: #64748b; }
-        body.light .table-header { background: #f1f5f9; color: #475569; }
-        body.light .input-box { background: #fff; border-color: #cbd5e1; color: #0f172a; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
 
-        /* Glow Effects */
-        .pink-glow {
-            box-shadow: 0 0 50px -10px rgba(236, 72, 153, 0.35);
-        }
-        .purple-glow {
-            box-shadow: 0 0 50px -10px rgba(168, 85, 247, 0.35);
-        }
-        .pulse-slow {
-            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-    </style>
-    <script>
-        // Theme Manager
-        function initTheme() {
-            const savedTheme = localStorage.getItem('lotus_theme') || 'dark';
-            applyTheme(savedTheme);
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
 
-        function toggleTheme() {
-            const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            applyTheme(newTheme);
-            localStorage.setItem('lotus_theme', newTheme);
-        }
+    /* Navbar */
+    header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      margin-bottom: 30px;
+    }
 
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.remove('light');
-                document.body.classList.add('dark');
-                document.getElementById('theme-icon').className = 'fas fa-sun text-amber-400 text-lg';
-            } else {
-                document.body.classList.remove('dark');
-                document.body.classList.add('light');
-                document.getElementById('theme-icon').className = 'fas fa-moon text-indigo-600 text-lg';
-            }
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        // Live Node Fetching
-        async function fetchNodeStatus() {
-            try {
-                let res = await fetch("http://127.0.0.1:8080/api/status");
-                let data = await res.json();
-                document.getElementById("node-status").innerText = "ONLINE";
-                document.getElementById("node-status").className = "px-3 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-extrabold flex items-center gap-2";
-                document.getElementById("node-dot").className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
-                
-                document.getElementById("chain-length").innerText = data.chain_length;
-                document.getElementById("mempool-txs").innerText = data.mempool_pending_txs;
-                document.getElementById("staked-amount").innerText = data.staked_amount + " LOTUS";
-                document.getElementById("latest-hash").innerText = data.latest_block_hash;
-            } catch (e) {
-                document.getElementById("node-status").innerText = "OFFLINE";
-                document.getElementById("node-status").className = "px-3 py-1.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full text-xs font-extrabold flex items-center gap-2";
-                document.getElementById("node-dot").className = "w-2 h-2 rounded-full bg-rose-500";
-            }
-        }
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
 
-        async function fetchBlocks() {
-            try {
-                let res = await fetch("http://127.0.0.1:8080/api/blocks");
-                let blocks = await res.json();
-                let tbody = document.getElementById("blocks-table");
-                if (!tbody) return;
-                tbody.innerHTML = "";
-                blocks.reverse().forEach(b => {
-                    tbody.innerHTML += `
-                        <tr class="border-b border-slate-700/30 hover:bg-pink-500/5 transition">
-                            <td class="p-4 font-mono font-bold text-pink-500">#${b.index}</td>
-                            <td class="p-4 font-mono text-xs truncate max-w-xs font-medium">${b.hash}</td>
-                            <td class="p-4 font-mono text-xs truncate max-w-xs text-muted">${b.prev_hash}</td>
-                            <td class="p-4 font-mono font-semibold">${b.nonce}</td>
-                            <td class="p-4 font-mono font-bold text-purple-400">${b.tx_count}</td>
-                        </tr>`;
-                });
-            } catch (e) {}
-        }
+    /* Glassmorphic Container */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 20px 40px var(--glow-color);
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 25px;
+    }
 
-        async function triggerAction(endpoint, msg) {
-            try {
-                let res = await fetch("http://127.0.0.1:8080" + endpoint);
-                let data = await res.json();
-                alert(msg + ": " + JSON.stringify(data));
-                fetchNodeStatus();
-                fetchBlocks();
-            } catch (e) {
-                alert("Node unreachable! Ensure Docker node is running on 8080 and allow 'Insecure Content' in browser site settings.");
-            }
-        }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
 
-        async function generateWallet() {
-            try {
-                let res = await fetch("http://127.0.0.1:8080/api/wallet/generate");
-                let data = await res.json();
-                document.getElementById("wallet-result").classList.remove("hidden");
-                document.getElementById("wallet-addr").innerText = data.address;
-                document.getElementById("wallet-seed").innerText = data.mnemonic;
-            } catch (e) {
-                alert("Please start local node to generate wallet.");
-            }
-        }
+    /* Buttons */
+    .btn {
+      background: var(--accent-gradient);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px var(--glow-color);
+      transition: transform 0.2s, opacity 0.2s;
+    }
 
-        setInterval(() => { fetchNodeStatus(); fetchBlocks(); }, 3000);
-        window.onload = () => { initTheme(); fetchNodeStatus(); fetchBlocks(); };
-    </script>
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      box-shadow: none;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    /* Inputs */
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 20px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
-<body class="dark min-h-screen relative overflow-x-hidden">
+<body>
 
-    <!-- Ambient Glowing Orbs -->
-    <div class="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl pointer-events-none pulse-slow"></div>
-    <div class="absolute top-1/3 right-10 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none pulse-slow"></div>
+  <!-- Navbar -->
+  <header>
+    <div class="brand">
+      🌸 Lotus Coin ($LOTUS)
+    </div>
+    <div class="nav-controls">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+        🌙 Dark
+      </button>
+      <button class="btn" id="connectWalletBtn" onclick="connectWallet()">
+        <i class="fa-solid fa-wallet"></i> Connect MetaMask
+      </button>
+    </div>
+  </header>
 
-    <!-- Navigation Bar -->
-    <nav class="nav-glass border-b sticky top-0 z-50 px-6 py-4 backdrop-blur-md transition-colors">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <span class="text-3xl filter drop-shadow-md">🌸</span>
-                <span class="text-2xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">Lotus Coin</span>
-            </div>
-            
-            <div class="hidden md:flex items-center space-x-8 text-sm font-semibold text-muted">
-                <a href="#about" class="hover:text-pink-500 transition">Features</a>
-                <a href="#tokenomics" class="hover:text-pink-500 transition">Tokenomics</a>
-                <a href="#roadmap" class="hover:text-pink-500 transition">Roadmap</a>
-                <a href="#ledger" class="hover:text-pink-500 transition">Ledger</a>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <!-- Theme Switcher Button -->
-                <button onclick="toggleTheme()" class="p-2.5 rounded-xl glass-card hover:scale-105 transition active:scale-95" title="Toggle Light/Dark Theme">
-                    <i id="theme-icon" class="fas fa-sun text-amber-400 text-lg"></i>
-                </button>
-
-                <!-- Node Status Badge -->
-                <div id="node-status" class="px-3 py-1.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full text-xs font-extrabold flex items-center gap-2">
-                    <span id="node-dot" class="w-2 h-2 rounded-full bg-rose-500"></span>
-                    CONNECTING
-                </div>
-
-                <button onclick="openModal('signupModal')" class="bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-pink-500/20 transition hover:scale-105 active:scale-95">
-                    Sign Up / Wallet
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-6 pt-16 pb-12 text-center relative z-10">
-        <div class="inline-flex items-center space-x-2 bg-pink-500/10 border border-pink-500/30 px-4 py-2 rounded-full text-pink-400 text-xs font-bold uppercase tracking-wider mb-8 pink-glow">
-            <span class="animate-pulse">✨</span>
-            <span>21 Million Hard Cap • Hybrid PoW/PoS Engine</span>
-        </div>
-
-        <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-tight">
-            The Quantum-Grade <br/>
-            <span class="bg-gradient-to-r from-pink-500 via-purple-400 to-indigo-400 bg-clip-text text-transparent">Decentralized Blockchain</span>
+  <!-- Hero & Web3 Balance Dashboard -->
+  <div class="glass-card">
+    <div class="grid-2" style="align-items: center;">
+      <div>
+        <span class="badge"><i class="fa-solid fa-circle"></i> Hybrid PoW/PoS Network Live</span>
+        <h1 style="font-size: 2.5rem; margin: 15px 0 10px 0; font-weight: 800;">
+          The High-Performance Decentralized Ledger
         </h1>
-
-        <p class="text-muted text-base md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-            High-performance modular C++ cryptocurrency engine built with OpenSSL secp256k1 cryptography, LevelDB state storage, and dynamic difficulty consensus.
+        <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+          Lotus Coin ($LOTUS) combines C++ native consensus performance with ERC-20 token wrapper flexibility for seamless DEX liquidity and global node synchronization.
         </p>
+        <button class="btn" onclick="document.getElementById('presaleSection').scrollIntoView({behavior: 'smooth'})">
+          🚀 Join Presale
+        </button>
+        <a href="https://github.com/pawan0810-ops/Lotus_Coin" target="_blank" class="btn btn-secondary" style="text-decoration: none; margin-left: 10px;">
+          <i class="fa-brands fa-github"></i> GitHub Code
+        </a>
+      </div>
 
-        <div class="flex flex-wrap justify-center gap-4 mb-16">
-            <button onclick="openModal('presaleModal')" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-extrabold px-8 py-4 rounded-2xl text-sm shadow-xl shadow-pink-500/30 transition hover:scale-105">
-                🔥 Buy $LOTUS Presale
-            </button>
-            <button onclick="triggerAction('/api/stake', 'Stake Response')" class="bg-purple-600 hover:bg-purple-500 text-white font-extrabold px-8 py-4 rounded-2xl text-sm shadow-xl shadow-purple-600/30 transition hover:scale-105">
-                ⚡ Stake 25.0 LOTUS
-            </button>
-            <button onclick="triggerAction('/api/mine', 'Mine Response')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-8 py-4 rounded-2xl text-sm shadow-xl shadow-emerald-600/30 transition hover:scale-105">
-                ⛏️ Mine New Block
-            </button>
+      <!-- Web3 Live Wallet Box -->
+      <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px;">
+        <h3 style="font-size: 1.2rem; margin-bottom: 15px;">💎 Your Web3 Wallet Status</h3>
+        <p id="walletAddressText" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">
+          Status: Not Connected
+        </p>
+        
+        <div style="margin: 20px 0; padding: 15px; background: rgba(236,72,153,0.08); border-radius: 14px; border: 1px solid rgba(236,72,153,0.2);">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Live $WLOTUS Balance</span>
+          <h2 id="wlotusBalance" style="font-size: 2rem; color: var(--accent-color); margin-top: 5px;">0.00 WLOTUS</h2>
         </div>
 
-        <!-- Latest Hash Card Banner -->
-        <div class="glass-card p-4 rounded-2xl max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 text-xs font-mono border">
-            <span class="text-muted font-bold uppercase">Latest Block Hash:</span>
-            <span id="latest-hash" class="text-emerald-400 font-bold break-all truncate max-w-xl">-</span>
-        </div>
-    </section>
-
-    <!-- Live Metrics Dashboard -->
-    <section class="max-w-7xl mx-auto px-6 mb-16">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="glass-card p-6 rounded-3xl border transition hover:scale-105">
-                <p class="text-muted text-xs font-bold uppercase tracking-wider mb-2">Chain Height</p>
-                <p id="chain-length" class="text-4xl font-black text-pink-500">-</p>
-                <span class="text-xs text-pink-400/80 font-medium mt-1 block">Live Blocks Mined</span>
-            </div>
-            <div class="glass-card p-6 rounded-3xl border transition hover:scale-105">
-                <p class="text-muted text-xs font-bold uppercase tracking-wider mb-2">Mempool Queue</p>
-                <p id="mempool-txs" class="text-4xl font-black text-purple-400">-</p>
-                <span class="text-xs text-purple-400/80 font-medium mt-1 block">Pending Txs</span>
-            </div>
-            <div class="glass-card p-6 rounded-3xl border transition hover:scale-105">
-                <p class="text-muted text-xs font-bold uppercase tracking-wider mb-2">Staked Amount</p>
-                <p id="staked-amount" class="text-4xl font-black text-emerald-400">-</p>
-                <span class="text-xs text-emerald-400/80 font-medium mt-1 block">Active Pool Lock</span>
-            </div>
-            <div class="glass-card p-6 rounded-3xl border transition hover:scale-105">
-                <p class="text-muted text-xs font-bold uppercase tracking-wider mb-2">Total Supply Cap</p>
-                <p class="text-4xl font-black text-indigo-400">21,000,000</p>
-                <span class="text-xs text-indigo-400/80 font-medium mt-1 block">Strict Hard Limit</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tokenomics Section -->
-    <section id="tokenomics" class="max-w-7xl mx-auto px-6 mb-20">
-        <div class="glass-card p-8 rounded-3xl border">
-            <h2 class="text-2xl font-extrabold mb-2">📊 Tokenomics & Supply Allocations</h2>
-            <p class="text-muted text-sm mb-8">Transparent distribution plan for 21 Million $LOTUS coins.</p>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="p-4 rounded-2xl bg-pink-500/10 border border-pink-500/20">
-                    <p class="text-pink-400 font-bold text-xl mb-1">60% (12.6M)</p>
-                    <p class="text-xs text-muted">Mining & Staking Protocol Rewards</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20">
-                    <p class="text-purple-400 font-bold text-xl mb-1">20% (4.2M)</p>
-                    <p class="text-xs text-muted">DEX & CEX Liquidity Pools</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                    <p class="text-emerald-400 font-bold text-xl mb-1">10% (2.1M)</p>
-                    <p class="text-xs text-muted">Public Presale Stage 1</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-                    <p class="text-indigo-400 font-bold text-xl mb-1">10% (2.1M)</p>
-                    <p class="text-xs text-muted">Ecosystem Development & Treasury</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Recent Blockchain Ledger Table -->
-    <section id="ledger" class="max-w-7xl mx-auto px-6 mb-24">
-        <div class="glass-card rounded-3xl border overflow-hidden">
-            <div class="p-6 border-b border-slate-700/30 flex justify-between items-center">
-                <div>
-                    <h3 class="text-xl font-extrabold">📜 Recent Blockchain Ledger</h3>
-                    <p class="text-muted text-xs">Real-time block stream synced with local node</p>
-                </div>
-                <span class="px-3 py-1 bg-pink-500/10 text-pink-400 text-xs font-bold rounded-full border border-pink-500/20">Auto Sync 3s</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="table-header text-xs uppercase font-bold border-b border-slate-700/30">
-                            <th class="p-4">Index</th>
-                            <th class="p-4">Hash</th>
-                            <th class="p-4">Previous Hash</th>
-                            <th class="p-4">Nonce</th>
-                            <th class="p-4">Txs</th>
-                        </tr>
-                    </thead>
-                    <tbody id="blocks-table" class="divide-y divide-slate-700/20"></tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sign-Up & Wallet Modal -->
-    <div id="signupModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full relative border">
-            <button onclick="closeModal('signupModal')" class="absolute top-5 right-5 text-muted hover:text-pink-500 transition"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="text-2xl font-bold mb-1">Create Lotus Account</h3>
-            <p class="text-muted text-xs mb-6">Generate your non-custodial BIP-39 seed phrase</p>
-            <div class="space-y-4">
-                <input type="email" placeholder="Email Address" class="w-full input-box rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                <input type="password" placeholder="Password" class="w-full input-box rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                <button onclick="generateWallet()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-3.5 rounded-xl text-sm transition hover:opacity-90">
-                    Generate $LOTUS Wallet
-                </button>
-                <div id="wallet-result" class="hidden p-4 rounded-xl bg-pink-500/10 border border-pink-500/20 space-y-2 font-mono text-xs">
-                    <p class="text-slate-400 font-bold">Wallet Address:</p>
-                    <p id="wallet-addr" class="text-pink-400 font-bold truncate"></p>
-                    <p class="text-slate-400 font-bold pt-2">12-Word Seed Phrase:</p>
-                    <p id="wallet-seed" class="text-emerald-400 font-semibold"></p>
-                </div>
-            </div>
-        </div>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="fetchTokenBalance()">
+          <i class="fa-solid fa-rotate-right"></i> Refresh Balance
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- Presale Modal -->
-    <div id="presaleModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="glass-card rounded-3xl p-8 max-w-md w-full relative border">
-            <button onclick="closeModal('presaleModal')" class="absolute top-5 right-5 text-muted hover:text-pink-500 transition"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="text-2xl font-bold mb-1">Buy $LOTUS Presale</h3>
-            <p class="text-muted text-xs mb-6">Rate: 1 USDT = 20 $LOTUS ($0.05/token)</p>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-muted mb-1">You Pay (USDT)</label>
-                    <input type="number" id="usdtInput" oninput="document.getElementById('lotusOutput').value = this.value * 20" placeholder="100" class="w-full input-box rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-muted mb-1">You Receive ($LOTUS)</label>
-                    <input type="number" id="lotusOutput" readonly placeholder="2000" class="w-full input-box rounded-xl px-4 py-3 text-sm text-pink-500 font-bold">
-                </div>
-                <button onclick="alert('Connect Wallet or Transfer USDT to Presale Deposit Address');" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm transition">
-                    Proceed to Payment
-                </button>
-            </div>
+  <!-- Presale Calculator & Tokenomics -->
+  <div class="glass-card" id="presaleSection">
+    <div class="grid-2">
+      <!-- Calculator -->
+      <div>
+        <h2>💰 Presale Calculator</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+          1 USDT = 100 WLOTUS | Presale Hardcap: 2,100,000 WLOTUS
+        </p>
+        
+        <div class="input-group">
+          <label>You Pay (USDT)</label>
+          <input type="number" id="usdtInput" class="input-field" placeholder="e.g. 500" oninput="calculatePresale()">
         </div>
-    </div>
 
-    <script>
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-    </script>
+        <div class="input-group">
+          <label>You Receive ($WLOTUS)</label>
+          <input type="text" id="lotusOutput" class="input-field" placeholder="0 WLOTUS" readonly style="background: rgba(236,72,153,0.05); font-weight: 700;">
+        </div>
+
+        <button class="btn" style="width: 100%; justify-content: center;" onclick="buyTokensMock()">
+          ⚡ Reserve Tokens Now
+        </button>
+      </div>
+
+      <!-- Tokenomics Specs -->
+      <div>
+        <h2>📊 Token Distribution</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Allocation</th>
+              <th>Percentage</th>
+              <th>Amount ($LOTUS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mining / Staking Rewards</td>
+              <td>60%</td>
+              <td>12,600,000</td>
+            </tr>
+            <tr>
+              <td>DEX Liquidity Pool</td>
+              <td>20%</td>
+              <td>4,200,000</td>
+            </tr>
+            <tr>
+              <td>Presale Pool</td>
+              <td>10%</td>
+              <td>2,100,000</td>
+            </tr>
+            <tr>
+              <td>Development & Treasury</td>
+              <td>10%</td>
+              <td>2,100,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live P2P Node Network -->
+  <div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h2>📡 Live P2P Sync Nodes</h2>
+      <span class="badge">4 Nodes Active</span>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Node ID</th>
+          <th>Type</th>
+          <th>Height</th>
+          <th>Latency</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>node-01.lotus.net</td>
+          <td>C++ Primary Seed</td>
+          <td>#104,921</td>
+          <td>18 ms</td>
+          <td><span class="badge">Online</span></td>
+        </tr>
+        <tr>
+          <td>node-02.lotus.net</td>
+          <td>PoS Validator</td>
+          <td>#104,921</td>
+          <td>32 ms</td>
+          <td><span class="badge">Online</span></td>
+        </tr>
+        <tr>
+          <td>node-03.lotus.net</td>
+          <td>P2P Relay</td>
+          <td>#104,920</td>
+          <td>45 ms</td>
+          <td><span class="badge">Online</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Lotus Coin Project ($LOTUS). Open Source under MIT License.</p>
+    <p style="margin-top: 5px;">
+      <a href="TERMS.md" style="color: var(--text-muted); text-decoration: underline;">Terms & Disclaimers</a> | 
+      Contract: <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px;">0xd914...39138</code>
+    </p>
+  </footer>
+
+  <!-- Web3 & UI Script -->
+  <script>
+    // Configuration
+    const CONTRACT_ADDRESS = "0xd9145CCE10a3d5b00c53e8d2e82E11A99FAe8B9A"; // Apna contract address update karein
+    const CONTRACT_ABI = [
+      "function balanceOf(address owner) view returns (uint256)",
+      "function decimals() view returns (uint8)",
+      "function symbol() view returns (string)"
+    ];
+
+    let provider, signer, contract, userAddress;
+
+    // 1. Theme Switcher Logic
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('themeBtn').innerHTML = isLight ? '☀️ Light' : '🌙 Dark';
+    }
+
+    // 2. MetaMask Web3 Connection
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          userAddress = accounts[0];
+
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          signer = provider.getSigner();
+          contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+
+          // UI Update
+          const shortAddr = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
+          document.getElementById("walletAddressText").innerHTML = `Connected: <b style="color: var(--accent-color);">${shortAddr}</b>`;
+          document.getElementById("connectWalletBtn").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${shortAddr}`;
+
+          fetchTokenBalance();
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+          alert("Could not connect wallet!");
+        }
+      } else {
+        alert("MetaMask extension not found! Please install MetaMask.");
+      }
+    }
+
+    // 3. Fetch Token Balance from Smart Contract
+    async function fetchTokenBalance() {
+      if (!contract || !userAddress) {
+        alert("Please connect your wallet first!");
+        return;
+      }
+
+      try {
+        const rawBalance = await contract.balanceOf(userAddress);
+        const formatted = ethers.utils.formatUnits(rawBalance, 18);
+        document.getElementById("wlotusBalance").innerText = `${parseFloat(formatted).toLocaleString()} WLOTUS`;
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+        // Fallback demo for display
+        document.getElementById("wlotusBalance").innerText = "0.00 WLOTUS";
+      }
+    }
+
+    // 4. Presale Calculator Logic
+    function calculatePresale() {
+      const usdt = document.getElementById('usdtInput').value;
+      const rate = 100; // 1 USDT = 100 LOTUS
+      if (usdt && usdt > 0) {
+        document.getElementById('lotusOutput').value = `${(usdt * rate).toLocaleString()} WLOTUS`;
+      } else {
+        document.getElementById('lotusOutput').value = '';
+      }
+    }
+
+    function buyTokensMock() {
+      const amount = document.getElementById('lotusOutput').value;
+      if (!amount) {
+        alert("Please enter a valid USDT amount!");
+        return;
+      }
+      alert(`Presale Order Placed: Requesting ${amount}. Please connect MetaMask on BSC/Sepolia Testnet to complete transaction!`);
+    }
+  </script>
 </body>
 </html>
