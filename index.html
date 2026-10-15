@@ -6,8 +6,60 @@
     <title>Lotus Coin ($LOTUS) — Next-Gen Decentralized Blockchain</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        async function fetchNodeStatus() {
+            try {
+                let res = await fetch("http://127.0.0.1:8080/api/status");
+                let data = await res.json();
+                document.getElementById("node-status").innerText = "ONLINE";
+                document.getElementById("node-status").className = "px-3 py-1 bg-emerald-900/80 text-emerald-300 border border-emerald-500/30 rounded-full text-xs font-bold animate-pulse";
+                document.getElementById("chain-length").innerText = data.chain_length;
+                document.getElementById("mempool-txs").innerText = data.mempool_pending_txs;
+                document.getElementById("staked-amount").innerText = data.staked_amount + " LOTUS";
+                document.getElementById("latest-hash").innerText = data.latest_block_hash;
+            } catch (e) {
+                document.getElementById("node-status").innerText = "OFFLINE (Start local node)";
+                document.getElementById("node-status").className = "px-3 py-1 bg-red-900/80 text-red-300 border border-red-500/30 rounded-full text-xs font-bold";
+            }
+        }
+
+        async function fetchBlocks() {
+            try {
+                let res = await fetch("http://127.0.0.1:8080/api/blocks");
+                let blocks = await res.json();
+                let tbody = document.getElementById("blocks-table");
+                if (!tbody) return;
+                tbody.innerHTML = "";
+                blocks.reverse().forEach(b => {
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                            <td class="p-3 font-mono text-pink-400">#${b.index}</td>
+                            <td class="p-3 font-mono text-xs truncate max-w-xs text-slate-200">${b.hash}</td>
+                            <td class="p-3 font-mono text-xs truncate max-w-xs text-slate-500">${b.prev_hash}</td>
+                            <td class="p-3 font-mono text-slate-300">${b.nonce}</td>
+                            <td class="p-3 font-mono text-slate-300">${b.tx_count}</td>
+                        </tr>`;
+                });
+            } catch (e) {}
+        }
+
+        async function triggerAction(endpoint, msg) {
+            try {
+                let res = await fetch("http://127.0.0.1:8080" + endpoint);
+                let data = await res.json();
+                alert(msg + ": " + JSON.stringify(data));
+                fetchNodeStatus();
+                fetchBlocks();
+            } catch (e) {
+                alert("Node unreachable! Make sure Docker node is running on 8080 and Insecure Content is allowed in site settings.");
+            }
+        }
+
+        setInterval(() => { fetchNodeStatus(); fetchBlocks(); }, 3000);
+        window.onload = () => { fetchNodeStatus(); fetchBlocks(); };
+    </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans selection:bg-pink-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans selection:bg-pink-500 selection:text-white min-h-screen">
 
     <!-- Navigation Bar -->
     <nav class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
@@ -16,61 +68,76 @@
                 <span class="text-3xl">🌸</span>
                 <span class="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">Lotus Coin</span>
             </div>
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-                <a href="#about" class="hover:text-pink-400 transition">About</a>
-                <a href="#tokenomics" class="hover:text-pink-400 transition">Tokenomics</a>
-                <a href="#presale" class="hover:text-pink-400 transition">Presale</a>
-                <a href="TERMS.md" target="_blank" class="hover:text-pink-400 transition">Terms</a>
-            </div>
-            <div class="flex space-x-3">
+            <div class="flex items-center space-x-4">
+                <span id="node-status" class="px-3 py-1 bg-red-900/80 text-red-300 border border-red-500/30 rounded-full text-xs font-bold">CONNECTING...</span>
                 <button onclick="openModal('signupModal')" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-pink-500/20 transition">Sign Up</button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-6 py-20 text-center relative overflow-hidden">
+    <section class="max-w-7xl mx-auto px-6 py-12 text-center">
         <div class="inline-flex items-center space-x-2 bg-pink-500/10 border border-pink-500/20 px-4 py-1.5 rounded-full text-pink-400 text-xs font-semibold uppercase tracking-wider mb-6">
             <span>🚀 Public Mainnet Live • 21 Million Hard Cap</span>
         </div>
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-            The Future of <span class="bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">Hybrid PoW/PoS</span> Blockchain
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Next-Gen <span class="bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">Hybrid PoW/PoS</span> Blockchain
         </h1>
-        <p class="text-slate-400 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
-            High-throughput C++ blockchain architecture built with OpenSSL cryptography, LevelDB state storage, and dynamic difficulty adjustment.
-        </p>
-        <div class="flex justify-center space-x-4">
-            <button onclick="openModal('presaleModal')" class="bg-pink-600 hover:bg-pink-500 text-white font-bold px-8 py-4 rounded-xl text-base shadow-xl shadow-pink-600/30 transition">
+        <div class="flex justify-center space-x-4 mb-10">
+            <button onclick="openModal('presaleModal')" class="bg-pink-600 hover:bg-pink-500 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-xl shadow-pink-600/30 transition">
                 Buy $LOTUS Presale
             </button>
-            <a href="https://github.com/Pawan0810-ops/Lotus_Coin" target="_blank" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold px-8 py-4 rounded-xl text-base transition">
-                <i class="fab font-normal fa-github mr-2"></i> GitHub Repository
-            </a>
+            <button onclick="triggerAction('/api/stake', 'Stake Response')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-xl shadow-purple-600/30 transition">
+                Stake 25 LOTUS
+            </button>
+            <button onclick="triggerAction('/api/mine', 'Mine Response')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-xl shadow-emerald-600/30 transition">
+                Mine Block
+            </button>
         </div>
     </section>
 
-    <!-- Real-time Stats Grid -->
-    <section class="max-w-7xl mx-auto px-6 mb-20">
+    <!-- Real-time Node Stats Grid -->
+    <section class="max-w-7xl mx-auto px-6 mb-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Max Total Supply</p>
+                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Chain Length</p>
+                <p id="chain-length" class="text-3xl font-extrabold text-pink-400">-</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Pending Txs</p>
+                <p id="mempool-txs" class="text-3xl font-extrabold text-purple-400">-</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Staked Amount</p>
+                <p id="staked-amount" class="text-3xl font-extrabold text-emerald-400">-</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Max Supply</p>
                 <p class="text-3xl font-extrabold text-slate-100">21,000,000</p>
-                <span class="text-xs text-pink-400 mt-1 block">Hard Capped Limit</span>
             </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Consensus</p>
-                <p class="text-3xl font-extrabold text-purple-400">PoW / PoS</p>
-                <span class="text-xs text-slate-400 mt-1 block">Hybrid Engine</span>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Presale Price</p>
-                <p class="text-3xl font-extrabold text-emerald-400">$0.05 USDT</p>
-                <span class="text-xs text-emerald-400/80 mt-1 block">Stage 1 Price</span>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Min Stake Gate</p>
-                <p class="text-3xl font-extrabold text-pink-400">10 LOTUS</p>
-                <span class="text-xs text-slate-400 mt-1 block">Validator Threshold</span>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 mt-6 font-mono text-xs">
+            <span class="text-slate-500">Latest Block Hash:</span> <span id="latest-hash" class="text-emerald-400 break-all">-</span>
+        </div>
+    </section>
+
+    <!-- Blocks Table -->
+    <section class="max-w-7xl mx-auto px-6 mb-20">
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+            <div class="p-4 bg-slate-900/50 border-b border-slate-800 font-bold text-slate-200">Recent Blockchain Ledger</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-950 text-slate-400 text-xs uppercase border-b border-slate-800">
+                            <th class="p-3">Index</th>
+                            <th class="p-3">Hash</th>
+                            <th class="p-3">Previous Hash</th>
+                            <th class="p-3">Nonce</th>
+                            <th class="p-3">Txs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blocks-table"></tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -80,20 +147,12 @@
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full relative">
             <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-slate-500 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             <h3 class="text-2xl font-bold mb-2">Create Lotus Account</h3>
-            <p class="text-slate-400 text-sm mb-6">Sign up to receive your non-custodial BIP-39 wallet phrase.</p>
-            <form onsubmit="event.preventDefault(); alert('Account Created! Generating 12-Word Seed Phrase...'); closeModal('signupModal');">
+            <p class="text-slate-400 text-sm mb-6">Sign up to generate your BIP-39 wallet phrase.</p>
+            <form onsubmit="event.preventDefault(); alert('Account Created!'); closeModal('signupModal');">
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Email Address</label>
-                        <input type="email" required placeholder="investor@domain.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Password</label>
-                        <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                    </div>
-                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-3.5 rounded-xl text-sm transition">
-                        Sign Up & Generate Wallet
-                    </button>
+                    <input type="email" required placeholder="investor@domain.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
+                    <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
+                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-3.5 rounded-xl text-sm transition">Sign Up</button>
                 </div>
             </form>
         </div>
@@ -106,17 +165,9 @@
             <h3 class="text-2xl font-bold mb-2">Buy $LOTUS Presale</h3>
             <p class="text-slate-400 text-sm mb-6">Rate: 1 USDT = 20 LOTUS ($0.05/token)</p>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">You Pay (USDT)</label>
-                    <input type="number" id="usdtInput" oninput="document.getElementById('lotusOutput').value = this.value * 20" placeholder="100" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">You Receive ($LOTUS)</label>
-                    <input type="number" id="lotusOutput" readonly placeholder="2000" class="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm text-pink-400 font-bold">
-                </div>
-                <button onclick="alert('Connect Wallet or Transfer USDT to Presale Deposit Address');" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm transition">
-                    Proceed to Payment
-                </button>
+                <input type="number" id="usdtInput" oninput="document.getElementById('lotusOutput').value = this.value * 20" placeholder="USDT Amount" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-500">
+                <input type="number" id="lotusOutput" readonly placeholder="LOTUS Tokens" class="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm text-pink-400 font-bold">
+                <button onclick="alert('Connect Wallet or Transfer USDT to Presale Deposit Address');" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm transition">Proceed to Payment</button>
             </div>
         </div>
     </div>
