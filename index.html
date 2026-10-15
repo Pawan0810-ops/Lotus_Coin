@@ -3,43 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lotus Coin ($LOTUS) — Official Web3 Ecosystem & Presale</title>
+  <title>Lotus Coin ($LOTUS) — Live Trading & Presale Portal</title>
 
-  <!-- Google Fonts & FontAwesome -->
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- Ethers.js v5 (Web3) -->
+  <!-- Web3 + Charts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
     :root {
       --bg-dark: #050714;
       --bg-gradient: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.22) 0%, rgba(6, 182, 212, 0.12) 35%, rgba(16, 185, 129, 0.05) 70%, #050714 100%);
 
-      --card-bg: rgba(15, 23, 42, 0.75);
-      --card-hover: rgba(23, 32, 54, 0.95);
+      --card-bg: rgba(15, 23, 42, 0.78);
       --glass-border: rgba(255, 255, 255, 0.12);
-
-      --header-bg: rgba(5, 7, 20, 0.85);
-      --ticker-bg: rgba(3, 5, 15, 0.75);
+      --header-bg: rgba(5, 7, 20, 0.88);
+      --ticker-bg: rgba(3, 5, 15, 0.85);
       --modal-bg: #090d21;
       --input-bg: rgba(0, 0, 0, 0.35);
-      --subtle-bg: rgba(255, 255, 255, 0.05);
+      --subtle-bg: rgba(255, 255, 255, 0.06);
+      --subtle-bg-hover: rgba(255, 255, 255, 0.14);
 
       --neon-cyan: #06b6d4;
       --neon-purple: #8b5cf6;
       --neon-pink: #ec4899;
       --neon-green: #10b981;
+      --neon-red: #ef4444;
       --gold: #f59e0b;
-      --danger: #ef4444;
 
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --grid-line: rgba(255, 255, 255, 0.05);
 
       --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
       --gradient-btn: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
-      --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
 
       --glow-cyan: 0 0 30px rgba(6, 182, 212, 0.35);
       --glow-purple: 0 0 35px rgba(139, 92, 246, 0.4);
@@ -49,16 +49,17 @@
     body.light-mode {
       --bg-dark: #f1f5f9;
       --bg-gradient: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.08) 40%, #f1f5f9 100%);
-      --card-bg: rgba(255, 255, 255, 0.88);
-      --card-hover: rgba(255, 255, 255, 0.98);
+      --card-bg: rgba(255, 255, 255, 0.9);
       --glass-border: rgba(0, 0, 0, 0.08);
-      --header-bg: rgba(255, 255, 255, 0.85);
-      --ticker-bg: rgba(255, 255, 255, 0.75);
+      --header-bg: rgba(255, 255, 255, 0.9);
+      --ticker-bg: rgba(255, 255, 255, 0.8);
       --modal-bg: #ffffff;
       --input-bg: rgba(0, 0, 0, 0.04);
-      --subtle-bg: rgba(0, 0, 0, 0.03);
+      --subtle-bg: rgba(0, 0, 0, 0.04);
+      --subtle-bg-hover: rgba(0, 0, 0, 0.08);
       --text-main: #0f172a;
       --text-muted: #64748b;
+      --grid-line: rgba(0, 0, 0, 0.06);
     }
 
     * {
@@ -68,12 +69,13 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
+    html, body { overflow-x: hidden; }
+
     body {
       background: var(--bg-dark);
       background-image: var(--bg-gradient);
       color: var(--text-main);
       min-height: 100vh;
-      overflow-x: hidden;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
@@ -100,31 +102,33 @@
     }
     .ticker-items::-webkit-scrollbar { display: none; }
 
-    .ticker-item span.label { color: var(--text-muted); }
-    .ticker-item span.val-green { color: var(--neon-green); font-weight: 700; }
-    .ticker-item span.val-cyan { color: var(--neon-cyan); font-weight: 700; }
+    .val-green { color: var(--neon-green); font-weight: 700; }
+    .val-cyan  { color: var(--neon-cyan); font-weight: 700; }
+    .val-red   { color: var(--neon-red); font-weight: 700; }
 
     /* ---------- Header ---------- */
     header {
-      max-width: 1320px;
+      max-width: 1380px;
       margin: 0 auto;
-      padding: 18px 24px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
       position: sticky;
       top: 0;
       z-index: 1000;
       background: var(--header-bg);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--glass-border);
+      flex-wrap: wrap;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
       letter-spacing: -0.8px;
       text-decoration: none;
@@ -132,8 +136,8 @@
     }
 
     .logo-badge {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 14px;
       background: var(--gradient-primary);
       display: flex;
@@ -142,18 +146,12 @@
       color: #fff;
       font-size: 1.3rem;
       box-shadow: var(--glow-purple);
-      animation: pulseGlow 3s infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      0%   { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
-      100% { box-shadow: 0 0 35px rgba(6, 182, 212, 0.7); }
     }
 
     nav ul {
       display: flex;
       list-style: none;
-      gap: 28px;
+      gap: 26px;
     }
 
     nav a {
@@ -177,10 +175,10 @@
       background: var(--gradient-btn);
       color: #000;
       border: none;
-      padding: 12px 22px;
-      border-radius: 14px;
+      padding: 10px 20px;
+      border-radius: 12px;
       font-weight: 800;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -195,7 +193,7 @@
       box-shadow: 0 0 35px rgba(16, 185, 129, 0.6);
     }
 
-    .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .btn-buy {
       background: var(--gradient-primary);
@@ -211,11 +209,9 @@
       border: 1px solid var(--glass-border);
       color: var(--text-main);
       box-shadow: none;
-      padding: 10px 18px;
-      font-size: 0.88rem;
     }
     .btn-auth:hover:not(:disabled) {
-      background: rgba(6, 182, 212, 0.12);
+      background: var(--subtle-bg-hover);
       border-color: var(--neon-cyan);
     }
 
@@ -231,90 +227,42 @@
     }
     .theme-toggle:hover { border-color: var(--neon-cyan); }
 
-    /* ---------- Hero ---------- */
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 50px;
+    /* ---------- User badge ---------- */
+    .user-profile-badge {
+      display: none;
       align-items: center;
-      padding: 70px 24px;
-      max-width: 1320px;
-      margin: 0 auto;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 30px;
+      gap: 10px;
+      padding: 6px 14px;
+      border-radius: 20px;
       background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.4);
+      border: 1px solid var(--neon-cyan);
+      font-size: 0.88rem;
+      font-weight: 700;
       color: var(--neon-cyan);
-      font-size: 0.85rem;
-      font-weight: 800;
-      margin-bottom: 20px;
     }
 
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      font-weight: 900;
-      line-height: 1.12;
-      letter-spacing: -1.8px;
-      margin-bottom: 20px;
-    }
+    .user-profile-badge.active { display: inline-flex; }
 
-    .gradient-text {
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .logout-btn {
+      background: none;
+      border: none;
+      color: var(--neon-red);
+      cursor: pointer;
+      margin-left: 6px;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease;
     }
+    .logout-btn:hover { transform: scale(1.15); }
 
-    .hero p {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      margin-bottom: 35px;
-      line-height: 1.7;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-top: 35px;
-      padding-top: 25px;
-      border-top: 1px solid var(--glass-border);
-    }
-
-    .stat-card h3 {
-      font-size: 1.7rem;
-      font-weight: 800;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-main);
-    }
-
-    .stat-card p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* ---------- Glass Cards ---------- */
+    /* ---------- Cards ---------- */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      padding: 30px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
       position: relative;
       overflow: hidden;
     }
@@ -327,44 +275,80 @@
       background: var(--gradient-primary);
     }
 
-    .buy-widget {
-      border: 1px solid rgba(139, 92, 246, 0.4);
-      box-shadow: var(--glow-purple);
+    /* ---------- Workspace ---------- */
+    .trading-workspace {
+      max-width: 1380px;
+      margin: 30px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 25px;
     }
 
-    .progress-bar-container {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      height: 14px;
+    .chart-container {
+      position: relative;
+      height: 420px;
       width: 100%;
-      overflow: hidden;
-      margin: 14px 0 8px 0;
-    }
-    body.light-mode .progress-bar-container { background: rgba(0, 0, 0, 0.08); }
-
-    .progress-fill {
-      height: 100%;
-      width: 80%;
-      background: var(--gradient-primary);
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(236, 72, 153, 0.8);
-      transition: width 0.6s ease;
+      margin-top: 15px;
     }
 
+    .timeframe-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tf-btn {
+      background: var(--subtle-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tf-btn.active,
+    .tf-btn:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+    }
+
+    /* ---------- Orderbook ---------- */
+    .orderbook-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+
+    .orderbook-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--glass-border);
+    }
+
+    /* ---------- Inputs ---------- */
     .input-group { margin-bottom: 16px; }
 
     .input-group label {
       display: block;
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 700;
     }
 
     .input-field {
       width: 100%;
-      padding: 14px 18px;
-      border-radius: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
       border: 1px solid var(--glass-border);
       background: var(--input-bg);
       color: var(--text-main);
@@ -376,112 +360,7 @@
 
     .input-field:focus {
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
-    }
-
-    .wallet-status-box {
-      margin: 18px 0;
-      padding: 14px;
-      background: var(--input-bg);
-      border-radius: 14px;
-      border: 1px solid var(--glass-border);
-    }
-
-    /* ---------- Payment Pills ---------- */
-    .payment-pills {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .pill-btn {
-      flex: 1;
-      padding: 9px;
-      background: var(--subtle-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: all 0.2s ease;
-    }
-
-    .pill-btn.active,
-    .pill-btn:hover {
-      border-color: var(--neon-cyan);
-      color: var(--text-main);
-      background: rgba(6, 182, 212, 0.15);
-    }
-
-    /* ---------- Features ---------- */
-    .section-title {
-      text-align: center;
-      margin: 80px 0 40px 0;
-      padding: 0 24px;
-    }
-
-    .section-title h2 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .section-title p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      margin-top: 10px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .feature-card {
-      background: var(--card-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 30px;
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--neon-purple);
-      box-shadow: var(--glow-purple);
-    }
-
-    .feature-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      background: rgba(139, 92, 246, 0.15);
-      color: var(--neon-purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-size: 1.15rem;
-      margin-bottom: 10px;
-    }
-
-    .feature-card p {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
     }
 
     /* ---------- Modals ---------- */
@@ -506,7 +385,7 @@
       border-radius: 28px;
       width: 100%;
       max-width: 480px;
-      padding: 34px;
+      padding: 32px;
       position: relative;
       box-shadow: var(--glow-purple);
       color: var(--text-main);
@@ -523,7 +402,7 @@
       width: 34px; height: 34px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.05rem;
+      font-size: 1rem;
       transition: background 0.2s ease;
     }
     .modal-close:hover { background: rgba(239, 68, 68, 0.2); }
@@ -531,10 +410,10 @@
     .auth-tabs {
       display: flex;
       gap: 8px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       background: var(--input-bg);
       padding: 6px;
-      border-radius: 14px;
+      border-radius: 12px;
     }
 
     .auth-tab-btn {
@@ -544,8 +423,8 @@
       background: transparent;
       color: var(--text-muted);
       font-weight: 800;
-      font-size: 0.88rem;
-      border-radius: 10px;
+      font-size: 0.86rem;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -558,216 +437,199 @@
     /* ---------- Footer ---------- */
     footer {
       border-top: 1px solid var(--glass-border);
-      background: rgba(3, 5, 12, 0.95);
-      padding: 60px 24px 30px 24px;
-      margin-top: 100px;
-    }
-    body.light-mode footer { background: rgba(255, 255, 255, 0.75); }
-
-    .footer-container {
-      max-width: 1320px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
+      background: var(--header-bg);
+      padding: 30px 24px;
+      margin-top: 60px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 992px) {
-      .hero { grid-template-columns: 1fr; text-align: center; }
-      .hero-cta { justify-content: center; }
-      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .trading-workspace { grid-template-columns: 1fr; }
       nav ul { display: none; }
     }
 
     @media (max-width: 560px) {
-      .ticker-items { gap: 18px; }
-      .btn { padding: 10px 14px; font-size: 0.82rem; }
-      .modal-box { padding: 24px; }
-      .payment-pills { flex-direction: column; }
+      .orderbook-grid { grid-template-columns: 1fr; }
+      .btn { padding: 9px 14px; font-size: 0.82rem; }
+      .glass-card { padding: 20px; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Live Top Ticker -->
+  <!-- Ticker -->
   <div class="ticker-bar">
     <div class="ticker-items">
-      <div class="ticker-item"><span class="label">LOTUS/USDT:</span> <span class="val-green">$0.0500 (+24.8%)</span></div>
-      <div class="ticker-item"><span class="label">HARD CAP:</span> <span class="val-cyan">21,000,000 LOTUS</span></div>
-      <div class="ticker-item"><span class="label">NETWORK LATENCY:</span> <span class="val-green">12ms</span></div>
-      <div class="ticker-item"><span class="label">CONSENSUS:</span> C++ PoW/PoS Hybrid Engine</div>
+      <div><span style="color:var(--text-muted);">LOTUS/USDT:</span> <span class="val-green">$0.0524 (+14.2%)</span></div>
+      <div><span style="color:var(--text-muted);">24H HIGH:</span> <span class="val-cyan">$0.0580</span></div>
+      <div><span style="color:var(--text-muted);">24H LOW:</span> <span class="val-cyan">$0.0410</span></div>
+      <div><span style="color:var(--text-muted);">24H VOLUME:</span> <span class="val-green">2,480,120 LOTUS</span></div>
+      <div><span style="color:var(--text-muted);">SUPPLY CAP:</span> 21,000,000 LOTUS</div>
     </div>
-    <div><span class="val-green">● Web3 Mainnet Active</span></div>
+    <div><span class="val-green">● Live Market</span></div>
   </div>
 
   <!-- Header -->
   <header>
     <a href="#" class="brand">
-      <div class="logo-badge"><i class="fa-solid fa-spa"></i></div>
-      Lotus Coin
+      <div class="logo-badge"><i class="fa-solid fa-chart-line"></i></div>
+      Lotus Trade
     </a>
 
     <nav>
       <ul>
-        <li><a href="#about">Ecosystem</a></li>
-        <li><a href="#presale">Presale</a></li>
-        <li><a href="#features">Security</a></li>
-        <li><a href="#nodes">Nodes</a></li>
+        <li><a href="#chart">Trading Chart</a></li>
+        <li><a href="#orderbook">Order Book</a></li>
+        <li><a href="#presale">Buy Presale</a></li>
+        <li><a href="https://github.com/Pawan0810-ops/Lotus_Coin" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </nav>
 
     <div class="nav-actions">
       <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" type="button" aria-label="Toggle theme">🌙</button>
-      <button class="btn btn-auth" onclick="openAuthModal('login')" type="button">
-        <i class="fa-solid fa-user"></i> Login
-      </button>
-      <button class="btn btn-auth" onclick="openAuthModal('signup')" type="button">
-        <i class="fa-solid fa-user-plus"></i> Sign Up
-      </button>
+
+      <div id="authButtonsGroup" style="display: flex; gap: 8px;">
+        <button class="btn btn-auth" onclick="openAuthModal('login')" type="button">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+        <button class="btn btn-auth" onclick="openAuthModal('signup')" type="button">
+          <i class="fa-solid fa-user-plus"></i> Sign Up
+        </button>
+      </div>
+
+      <div class="user-profile-badge" id="userProfileBadge">
+        <i class="fa-solid fa-circle-user"></i>
+        <span id="loggedUserName">Trader</span>
+        <button class="logout-btn" onclick="logoutUser()" type="button" title="Logout">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </div>
+
       <button class="btn btn-buy" onclick="openBuyModal()" type="button">
-        <i class="fa-solid fa-cart-shopping"></i> Buy $LOTUS
+        <i class="fa-solid fa-bolt"></i> Buy $LOTUS
       </button>
       <button class="btn" id="connectWalletBtn" onclick="connectWallet()" type="button">
-        <i class="fa-solid fa-wallet"></i> Connect Wallet
+        <i class="fa-solid fa-wallet"></i> Wallet
       </button>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero" id="about">
+  <!-- Workspace -->
+  <div class="trading-workspace" id="chart">
+    <!-- Left: Chart + Orderbook -->
     <div>
-      <div class="hero-badge">
-        <i class="fa-solid fa-shield-halved"></i> Bitcoin Trust × Solana Velocity
-      </div>
-      <h1>Next-Gen <span class="gradient-text">Decentralized</span> Financial Engine</h1>
-      <p>
-        Lotus Coin ($LOTUS) combines C++ native SHA-256 Proof-of-Work security with BEP-20 smart wrapper token liquidity.
-        Hard-capped at 21,000,000 $LOTUS for maximum scarcity.
-      </p>
+      <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <span>🌸 LOTUS / USDT</span>
+              <span class="val-green" style="font-size: 1.05rem; font-family: 'JetBrains Mono', monospace;">$0.0524</span>
+              <span style="font-size: 0.8rem; background: rgba(16,185,129,0.15); color: var(--neon-green); padding: 2px 8px; border-radius: 6px;">+14.2%</span>
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+              Live market overview (illustrative — not real-time)
+            </p>
+          </div>
 
-      <div class="hero-cta">
-        <button class="btn btn-buy" onclick="openBuyModal()" type="button">
-          <i class="fa-solid fa-rocket"></i> Buy $LOTUS Now
-        </button>
-        <button class="btn btn-auth" onclick="openAuthModal('signup')" type="button">
-          <i class="fa-solid fa-user-check"></i> Create Account
-        </button>
-        <a href="https://github.com/Pawan0810-ops/Lotus_Coin" target="_blank" rel="noopener" class="btn btn-auth">
-          <i class="fa-brands fa-github"></i> GitHub Code
-        </a>
+          <div class="timeframe-bar">
+            <button class="tf-btn" data-tf="1M"  onclick="updateChartData(this, '1M')"  type="button">1M</button>
+            <button class="tf-btn active" data-tf="15M" onclick="updateChartData(this, '15M')" type="button">15M</button>
+            <button class="tf-btn" data-tf="1H"  onclick="updateChartData(this, '1H')"  type="button">1H</button>
+            <button class="tf-btn" data-tf="1D"  onclick="updateChartData(this, '1D')"  type="button">1D</button>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
+        </div>
       </div>
 
-      <div class="hero-stats">
-        <div class="stat-card">
-          <h3 style="color: var(--gold);">21.0M</h3>
-          <p>Total Supply Cap</p>
-        </div>
-        <div class="stat-card">
-          <h3 style="color: var(--neon-cyan);">65,000</h3>
-          <p>TPS Capacity</p>
-        </div>
-        <div class="stat-card">
-          <h3 style="color: var(--neon-green);">0.001s</h3>
-          <p>Block Latency</p>
-        </div>
-        <div class="stat-card">
-          <h3 style="color: var(--neon-pink);">100%</h3>
-          <p>C++ Native Core</p>
+      <!-- Orderbook -->
+      <div class="glass-card" style="margin-top: 25px;" id="orderbook">
+        <h3 style="font-size: 1.05rem; margin-bottom: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <span>📖 Order Book &amp; Trades</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">Demo data</span>
+        </h3>
+
+        <div class="orderbook-grid">
+          <div>
+            <div style="color: var(--neon-red); font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid var(--glass-border); padding-bottom: 4px;">
+              Sell Orders (Asks)
+            </div>
+            <div class="orderbook-row"><span style="color:var(--neon-red);">$0.0530</span> <span>12,500 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-red);">$0.0528</span> <span>8,200 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-red);">$0.0526</span> <span>15,000 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-red);">$0.0525</span> <span>4,100 LOTUS</span></div>
+          </div>
+
+          <div>
+            <div style="color: var(--neon-green); font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid var(--glass-border); padding-bottom: 4px;">
+              Buy Orders (Bids)
+            </div>
+            <div class="orderbook-row"><span style="color:var(--neon-green);">$0.0523</span> <span>22,000 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-green);">$0.0521</span> <span>18,400 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-green);">$0.0519</span> <span>35,000 LOTUS</span></div>
+            <div class="orderbook-row"><span style="color:var(--neon-green);">$0.0515</span> <span>50,000 LOTUS</span></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Buy Widget -->
-    <div class="glass-card buy-widget" id="presale">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-        <span style="font-weight: 900; font-size: 1.2rem;" class="gradient-text">🔥 Public Presale Stage 1</span>
-        <span style="font-size: 0.85rem; color: var(--gold); font-weight: 800;">1 USDT = 100 WLOTUS</span>
-      </div>
-
-      <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
-        <span>Raised: <b style="color: var(--text-main);">$1,680,000 USDT</b></span>
-        <span>Target: <b style="color: var(--text-main);">$2,100,000</b></span>
-      </div>
-
-      <div class="progress-bar-container">
-        <div class="progress-fill"></div>
-      </div>
-      <p style="text-align: right; font-size: 0.8rem; color: var(--neon-green); font-weight: 800;">80% Allocation Sold</p>
-
-      <!-- Wallet status -->
-      <div class="wallet-status-box">
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Connected Web3 Wallet</div>
-        <div id="walletAddressText" style="font-weight: 800; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; word-break: break-all;">
-          Status: Not Connected
+    <!-- Right: Portfolio -->
+    <div>
+      <div class="glass-card" id="presale">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 8px;">
+          <h3 style="font-size: 1.15rem; font-weight: 800;">💰 Investor Terminal</h3>
+          <span style="font-size: 0.8rem; color: var(--gold); font-weight: 800;">Stage 1 Presale</span>
         </div>
-        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Your $WLOTUS Balance:</span>
-          <span id="wlotusBalance" style="font-weight: 900; color: var(--neon-cyan); font-size: 1.1rem;">0.00 WLOTUS</span>
+
+        <div style="padding: 16px; background: var(--input-bg); border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">
+            Portfolio Value <span style="opacity: 0.7;">(@ $0.0524)</span>
+          </div>
+          <h2 id="portfolioValText" style="font-size: 1.7rem; font-weight: 800; color: var(--neon-green); font-family: 'JetBrains Mono', monospace;">
+            $0.00 USDT
+          </h2>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.85rem; border-top: 1px dashed var(--glass-border); padding-top: 8px; flex-wrap: wrap; gap: 6px;">
+            <span style="color: var(--text-muted);">$WLOTUS Balance:</span>
+            <span id="wlotusBalance" style="font-weight: 800; color: var(--neon-cyan);">0.00 WLOTUS</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.8rem; flex-wrap: wrap; gap: 6px;">
+            <span style="color: var(--text-muted);">Wallet:</span>
+            <span id="walletAddressText" style="font-family: 'JetBrains Mono', monospace;">Not Connected</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.8rem; flex-wrap: wrap; gap: 6px;">
+            <span style="color: var(--text-muted);">Network:</span>
+            <span id="networkBadge" style="color: var(--neon-cyan); font-weight: 700;">—</span>
+          </div>
         </div>
-        <div style="margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">
-          Network: <span id="networkBadge" style="color: var(--neon-cyan); font-weight: 700;">—</span>
+
+        <h4 style="font-size: 0.95rem; margin-bottom: 12px; font-weight: 700;">Place Buy Order</h4>
+
+        <div class="input-group">
+          <label for="usdtInput">You Spend (USDT)</label>
+          <input type="number" id="usdtInput" class="input-field" placeholder="e.g. 500" min="0" oninput="calculatePresale()" />
         </div>
-      </div>
 
-      <!-- Payment method pills -->
-      <label style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 6px; display: block;">
-        Select Payment Method:
-      </label>
-      <div class="payment-pills">
-        <button type="button" class="pill-btn active" data-method="crypto" onclick="selectWidgetPayment(this)">
-          <i class="fa-brands fa-ethereum"></i> Crypto
+        <div class="input-group">
+          <label for="lotusOutput">You Receive ($WLOTUS)</label>
+          <input type="text" id="lotusOutput" class="input-field" placeholder="0 WLOTUS" readonly style="color: var(--neon-green); font-weight: 800;" />
+        </div>
+
+        <button class="btn btn-buy" style="width: 100%; justify-content: center; padding: 13px;" onclick="openBuyModal()" type="button">
+          ⚡ Execute Buy Order
         </button>
-        <button type="button" class="pill-btn" data-method="upi" onclick="selectWidgetPayment(this)">
-          <i class="fa-solid fa-qrcode"></i> UPI / QR
-        </button>
-        <button type="button" class="pill-btn" data-method="card" onclick="selectWidgetPayment(this)">
-          <i class="fa-solid fa-credit-card"></i> Card
-        </button>
+
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.5;">
+          Demo mode — real purchase requires a deployed presale contract.
+        </p>
       </div>
-
-      <!-- Calculator -->
-      <div class="input-group">
-        <label for="usdtInput">You Pay (USDT / INR Equivalent)</label>
-        <input type="number" id="usdtInput" class="input-field" placeholder="e.g. 500" min="0" oninput="calculatePresale()" />
-      </div>
-
-      <div class="input-group">
-        <label for="lotusOutput">You Receive ($WLOTUS)</label>
-        <input type="text" id="lotusOutput" class="input-field" placeholder="0 WLOTUS" readonly style="color: var(--neon-green); font-weight: 800;" />
-      </div>
-
-      <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="openBuyModal()" type="button">
-        ⚡ Instant Buy $WLOTUS Now
-      </button>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <div class="section-title" id="features">
-    <h2>Built For Security &amp; Global Scale</h2>
-    <p>Engineered with OpenSSL encryption, LevelDB state persistence, and Anti-Fraud shielding.</p>
-  </div>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
-      <h3>21M Hard Cap Scarcity</h3>
-      <p>Fixed supply curve guaranteed by C++ consensus rules, protecting long-term investor value against inflation.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
-      <h3>Anti-Fraud Shield</h3>
-      <p>Real-time automated Web3 security layer that restricts malicious actors and unauthorized proxy requests.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
-      <h3>BEP-20 Smart Wrapper</h3>
-      <p>Seamless 1-click swapping on PancakeSwap and Trust Wallet integration for global trading liquidity.</p>
     </div>
   </div>
 
@@ -781,47 +643,37 @@
         <button class="auth-tab-btn" id="tabSignupBtn" onclick="switchAuthTab('signup')" type="button">Sign Up</button>
       </div>
 
-      <!-- Login form -->
       <form id="loginForm" onsubmit="event.preventDefault(); handleAuthSubmit('login');">
         <div class="input-group">
-          <label for="loginEmail">Email Address or Wallet</label>
-          <input type="email" id="loginEmail" class="input-field" placeholder="investor@lotus.net" required />
+          <label for="loginUsernameInput">Email or Username</label>
+          <input type="text" id="loginUsernameInput" class="input-field" placeholder="e.g. Pawan Trader" required />
         </div>
         <div class="input-group">
           <label for="loginPassword">Password</label>
           <input type="password" id="loginPassword" class="input-field" placeholder="••••••••" required minlength="6" />
         </div>
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" type="submit">
-          <i class="fa-solid fa-right-to-bracket"></i> Login to Investor Portal
+          <i class="fa-solid fa-right-to-bracket"></i> Login &amp; Track Market
         </button>
       </form>
 
-      <!-- Signup form -->
       <form id="signupForm" style="display: none;" onsubmit="event.preventDefault(); handleAuthSubmit('signup');">
         <div class="input-group">
-          <label for="signupName">Full Name</label>
-          <input type="text" id="signupName" class="input-field" placeholder="John Doe" required />
+          <label for="signupNameInput">Full Name</label>
+          <input type="text" id="signupNameInput" class="input-field" placeholder="e.g. Pawan" required />
         </div>
         <div class="input-group">
           <label for="signupEmail">Email Address</label>
           <input type="email" id="signupEmail" class="input-field" placeholder="investor@lotus.net" required />
         </div>
         <div class="input-group">
-          <label for="signupPassword">Create Password</label>
+          <label for="signupPassword">Password</label>
           <input type="password" id="signupPassword" class="input-field" placeholder="••••••••" required minlength="6" />
         </div>
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" type="submit">
-          <i class="fa-solid fa-user-check"></i> Create Account
+          <i class="fa-solid fa-user-check"></i> Register Account
         </button>
       </form>
-
-      <div style="margin-top: 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
-        Or connect directly via Web3:
-        <button class="btn btn-auth" style="width: 100%; margin-top: 10px; justify-content: center;"
-                onclick="connectWallet(); closeAuthModal();" type="button">
-          <i class="fa-solid fa-wallet"></i> Connect MetaMask Wallet
-        </button>
-      </div>
     </div>
   </div>
 
@@ -829,10 +681,8 @@
   <div class="modal-overlay" id="buyModal">
     <div class="modal-box" role="dialog" aria-modal="true" aria-label="Buy tokens">
       <button class="modal-close" onclick="closeBuyModal()" type="button" aria-label="Close">✕</button>
-      <h3 style="font-size: 1.4rem; margin-bottom: 6px;">💳 Buy $LOTUS Tokens</h3>
-      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
-        Choose your preferred payment gateway:
-      </p>
+      <h3 style="font-size: 1.35rem; margin-bottom: 6px;">💳 Buy $LOTUS Tokens</h3>
+      <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 15px;">Select Payment Gateway:</p>
 
       <div class="auth-tabs">
         <button class="auth-tab-btn active" data-tab="upi" onclick="selectTab(this, 'upi')" type="button">🇮🇳 UPI / QR</button>
@@ -840,46 +690,31 @@
         <button class="auth-tab-btn" data-tab="paypal" onclick="selectTab(this, 'paypal')" type="button">🅿️ PayPal</button>
       </div>
 
-      <!-- UPI tab -->
       <div id="upiTab">
         <div style="text-align: center; padding: 15px; background: var(--subtle-bg); border-radius: 16px; margin-bottom: 15px;">
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Scan &amp; Pay with GPay, PhonePe, or Paytm</p>
-          <div style="background: #fff; padding: 10px; display: inline-block; border-radius: 12px; margin: 12px 0;">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lotuscoin@upi%26pn=Lotus%20Coin%20Presale"
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Scan with GPay, PhonePe, or Paytm</p>
+          <div style="background: #fff; padding: 10px; display: inline-block; border-radius: 12px; margin: 10px 0;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lotuscoin@upi%26pn=Lotus%20Coin"
                  alt="UPI QR Code" width="140" height="140" />
           </div>
-          <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--gold);">
-            UPI ID: lotuscoin@upi
-          </p>
+          <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--gold);">UPI ID: lotuscoin@upi</p>
         </div>
       </div>
 
-      <!-- Card tab -->
       <div id="cardTab" style="display: none;">
         <div class="input-group">
           <label for="cardNumber">Card Number</label>
           <input type="text" id="cardNumber" class="input-field" placeholder="4532 •••• •••• 8921" inputmode="numeric" />
         </div>
-        <div style="display: flex; gap: 10px;">
-          <div class="input-group" style="flex: 1;">
-            <label for="cardExpiry">Expiry Date</label>
-            <input type="text" id="cardExpiry" class="input-field" placeholder="MM/YY" />
-          </div>
-          <div class="input-group" style="flex: 1;">
-            <label for="cardCVV">CVV</label>
-            <input type="password" id="cardCVV" class="input-field" placeholder="•••" inputmode="numeric" maxlength="4" />
-          </div>
-        </div>
       </div>
 
-      <!-- PayPal tab -->
       <div id="paypalTab" style="display: none; text-align: center; padding: 20px 0;">
-        <i class="fa-brands fa-paypal" style="font-size: 3rem; color: #0070ba; margin-bottom: 10px;"></i>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Proceed to secure PayPal checkout window.</p>
+        <i class="fa-brands fa-paypal" style="font-size: 3rem; color: #0070ba;"></i>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 8px;">Proceed to secure PayPal checkout.</p>
       </div>
 
-      <div class="input-group" style="margin-top: 15px;">
-        <label for="modalWalletAddr">Your Receiving MetaMask Wallet Address</label>
+      <div class="input-group">
+        <label for="modalWalletAddr">Receiving Wallet Address (MetaMask / TrustWallet)</label>
         <input type="text" id="modalWalletAddr" class="input-field" placeholder="0x..." />
       </div>
 
@@ -891,15 +726,7 @@
 
   <!-- Footer -->
   <footer>
-    <div class="footer-container">
-      <a href="#" class="brand">
-        <div class="logo-badge"><i class="fa-solid fa-spa"></i></div>
-        Lotus Coin
-      </a>
-      <p style="color: var(--text-muted); font-size: 0.88rem;">
-        © 2026 Lotus Coin Project ($LOTUS). Open Source under MIT License.
-      </p>
-    </div>
+    <p>© 2026 Lotus Coin Project ($LOTUS). High-Performance PoW/PoS Blockchain Portal.</p>
   </footer>
 
   <!-- Scripts -->
@@ -907,31 +734,28 @@
     /* ============================================================
        1. CONFIGURATION
        ============================================================ */
-
-    // ⚠️ TODO: Apna PUBLIC NETWORK (BSC Mainnet/Testnet) par deployed
-    // contract address yahan paste karein. Remix VM address MetaMask
-    // par kaam nahi karega.
+    // ⚠️ TODO: Public network (BSC Mainnet/Testnet) par deployed contract
+    // address yahan paste karein. Remix VM address MetaMask par kaam
+    // nahi karega.
     const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-    // Full BEP-20 / ERC-20 ABI
     const CONTRACT_ABI = [
       "function name() view returns (string)",
       "function symbol() view returns (string)",
       "function decimals() view returns (uint8)",
       "function totalSupply() view returns (uint256)",
-      "function balanceOf(address owner) view returns (uint256)",
-      "function transfer(address to, uint amount) returns (bool)"
+      "function balanceOf(address owner) view returns (uint256)"
     ];
 
-    // Optional: auto network switch. "0x38" = BSC Mainnet, "0x61" = BSC Testnet.
-    // null = koi auto-switch nahi.
+    // Optional auto network switch: "0x38" = BSC Mainnet, "0x61" = BSC Testnet
     const EXPECTED_CHAIN_ID = null;
 
-    // Anti-fraud IP check — DISABLED by default. Free ipapi.co plan
-    // `security` field nahi deta. Enable only if aapke paas paid API hai.
+    // Anti-fraud IP check — DISABLED by default. ipapi.co free tier
+    // `security` field nahi deta. Paid API ke saath enable karein.
     const ENABLE_IP_CHECK = false;
 
-    const PRESALE_RATE = 100; // 1 USDT = 100 WLOTUS
+    const PRESALE_RATE = 100;  // 1 USDT = 100 WLOTUS
+    const DISPLAY_PRICE = 0.0524; // USDT per WLOTUS for portfolio display
 
     /* ============================================================
        2. STATE
@@ -940,6 +764,7 @@
     let signer = null;
     let contract = null;
     let userAddress = null;
+    let priceChart = null;
 
     /* ============================================================
        3. DOM
@@ -950,12 +775,15 @@
     const connectWalletBtn = document.getElementById("connectWalletBtn");
     const themeBtn = document.getElementById("themeBtn");
     const modalWalletAddr = document.getElementById("modalWalletAddr");
+    const portfolioValText = document.getElementById("portfolioValText");
 
     /* ============================================================
        4. INIT
        ============================================================ */
     window.addEventListener("DOMContentLoaded", () => {
       restoreTheme();
+      restoreUserSession();
+      initChart();
       if (ENABLE_IP_CHECK) checkVPN();
     });
 
@@ -963,8 +791,7 @@
        5. THEME
        ============================================================ */
     function restoreTheme() {
-      const saved = localStorage.getItem("lotus-theme");
-      if (saved === "light") {
+      if (localStorage.getItem("lotus-theme") === "light") {
         document.body.classList.add("light-mode");
         themeBtn.innerHTML = "☀️";
       }
@@ -975,6 +802,17 @@
       const isLight = document.body.classList.contains("light-mode");
       themeBtn.innerHTML = isLight ? "☀️" : "🌙";
       localStorage.setItem("lotus-theme", isLight ? "light" : "dark");
+
+      // Update chart colors for theme
+      if (priceChart) {
+        const grid = isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.05)";
+        const tick = isLight ? "#64748b" : "#94a3b8";
+        priceChart.options.scales.x.grid.color = grid;
+        priceChart.options.scales.y.grid.color = grid;
+        priceChart.options.scales.x.ticks.color = tick;
+        priceChart.options.scales.y.ticks.color = tick;
+        priceChart.update();
+      }
     }
 
     /* ============================================================
@@ -990,9 +828,8 @@
             <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#050714;color:#ef4444;text-align:center;padding:20px;font-family:sans-serif;">
               <div style="max-width:500px;background:rgba(239,68,68,0.1);border:1px solid #ef4444;padding:40px;border-radius:24px;">
                 <h1 style="font-size:2.5rem;margin-bottom:15px;">⛔ Access Denied</h1>
-                <p style="font-size:1.1rem;color:#f8fafc;margin-bottom:15px;">VPN, Proxy, or Tor Network detected.</p>
-                <p style="color:#94a3b8;font-size:0.9rem;line-height:1.5;">Lotus Coin Web Portal restricts proxy connections for regulatory and smart contract safety.</p>
-                <p style="margin-top:20px;font-weight:bold;color:#06b6d4;">Please turn off your VPN and reload the page.</p>
+                <p style="font-size:1.1rem;color:#f8fafc;">VPN or Proxy detected.</p>
+                <p style="color:#94a3b8;margin-top:10px;">Please turn off your VPN to access the platform.</p>
               </div>
             </div>`;
         }
@@ -1002,7 +839,120 @@
     }
 
     /* ============================================================
-       7. WALLET CONNECT
+       7. CHART
+       ============================================================ */
+    function initChart() {
+      const ctx = document.getElementById("priceChart").getContext("2d");
+      const isLight = document.body.classList.contains("light-mode");
+      const grid = isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.05)";
+      const tick = isLight ? "#64748b" : "#94a3b8";
+
+      priceChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["10:00","10:15","10:30","10:45","11:00","11:15","11:30","11:45","12:00","12:15"],
+          datasets: [{
+            label: "LOTUS Price ($)",
+            data: [0.0410, 0.0435, 0.0420, 0.0460, 0.0485, 0.0470, 0.0510, 0.0495, 0.0515, 0.0524],
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16, 185, 129, 0.15)",
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: "#06b6d4"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: grid }, ticks: { color: tick } },
+            y: { grid: { color: grid }, ticks: { color: tick } }
+          }
+        }
+      });
+    }
+
+    // Timeframe data presets
+    const TF_DATA = {
+      "1M":  { labels: ["-30m","-25m","-20m","-15m","-10m","-5m","0m"],
+               data: [0.0395, 0.0405, 0.0418, 0.0402, 0.0430, 0.0480, 0.0524] },
+      "15M": { labels: ["10:00","10:15","10:30","10:45","11:00","11:15","11:30","11:45","12:00","12:15"],
+               data: [0.0410, 0.0435, 0.0420, 0.0460, 0.0485, 0.0470, 0.0510, 0.0495, 0.0515, 0.0524] },
+      "1H":  { labels: ["08:00","09:00","10:00","11:00","12:00","13:00","14:00"],
+               data: [0.0380, 0.0405, 0.0410, 0.0460, 0.0524, 0.0540, 0.0530] },
+      "1D":  { labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+               data: [0.0320, 0.0360, 0.0400, 0.0450, 0.0480, 0.0510, 0.0524] }
+    };
+
+    function updateChartData(el, tf) {
+      document.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+
+      const preset = TF_DATA[tf];
+      if (!preset || !priceChart) return;
+
+      priceChart.data.labels = preset.labels;
+      priceChart.data.datasets[0].data = preset.data;
+      priceChart.update();
+    }
+
+    /* ============================================================
+       8. USER AUTH (demo only — localStorage)
+       ============================================================ */
+    function openAuthModal(mode) {
+      document.getElementById("authModal").classList.add("active");
+      switchAuthTab(mode);
+    }
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.remove("active");
+    }
+
+    function switchAuthTab(mode) {
+      document.getElementById("loginForm").style.display  = mode === "login"  ? "block" : "none";
+      document.getElementById("signupForm").style.display = mode === "signup" ? "block" : "none";
+      document.getElementById("tabLoginBtn").classList.toggle("active",  mode === "login");
+      document.getElementById("tabSignupBtn").classList.toggle("active", mode === "signup");
+    }
+
+    function handleAuthSubmit(mode) {
+      let name;
+      if (mode === "login") {
+        name = (document.getElementById("loginUsernameInput").value || "").trim() || "Trader";
+      } else {
+        name = (document.getElementById("signupNameInput").value || "").trim() || "Investor";
+      }
+
+      localStorage.setItem("lotus_user", name);
+      restoreUserSession();
+      closeAuthModal();
+      alert(`${mode === "login" ? "Logged in" : "Registered"} as ${name}.`);
+    }
+
+    function restoreUserSession() {
+      const user = localStorage.getItem("lotus_user");
+      const authGroup = document.getElementById("authButtonsGroup");
+      const badge = document.getElementById("userProfileBadge");
+
+      if (user) {
+        authGroup.style.display = "none";
+        badge.classList.add("active");
+        document.getElementById("loggedUserName").innerText = user;
+      } else {
+        authGroup.style.display = "flex";
+        badge.classList.remove("active");
+      }
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("lotus_user");
+      restoreUserSession();
+    }
+
+    /* ============================================================
+       9. WALLET
        ============================================================ */
     async function connectWallet() {
       if (!window.ethereum) {
@@ -1039,17 +989,17 @@
       } finally {
         connectWalletBtn.disabled = false;
         if (!userAddress) {
-          connectWalletBtn.innerHTML = `<i class="fa-solid fa-wallet"></i> Connect Wallet`;
+          connectWalletBtn.innerHTML = `<i class="fa-solid fa-wallet"></i> Wallet`;
         }
       }
     }
 
     function updateWalletUI() {
       if (!userAddress) return;
-
       const short = shortAddress(userAddress);
-      walletAddressText.innerHTML = `<b style="color: var(--neon-cyan);">${short}</b>`;
       connectWalletBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${short}`;
+      walletAddressText.innerText = short;
+      walletAddressText.style.color = "var(--neon-cyan)";
 
       if (modalWalletAddr) modalWalletAddr.value = userAddress;
     }
@@ -1060,10 +1010,12 @@
       signer = null;
       contract = null;
 
-      walletAddressText.innerText = "Status: Not Connected";
-      connectWalletBtn.innerHTML = `<i class="fa-solid fa-wallet"></i> Connect Wallet`;
+      walletAddressText.innerText = "Not Connected";
+      walletAddressText.style.color = "";
+      connectWalletBtn.innerHTML = `<i class="fa-solid fa-wallet"></i> Wallet`;
       wlotusBalance.innerText = "0.00 WLOTUS";
       networkBadge.innerText = "—";
+      portfolioValText.innerText = "$0.00 USDT";
     }
 
     function shortAddress(addr) {
@@ -1072,7 +1024,7 @@
     }
 
     /* ============================================================
-       8. BALANCE
+       10. BALANCE
        ============================================================ */
     async function fetchTokenBalance() {
       if (!contract || !userAddress) return;
@@ -1083,13 +1035,17 @@
           contract.decimals().catch(() => 18)
         ]);
 
-        // formatUnits returns a string with full precision; keep it that way.
         const formatted = ethers.utils.formatUnits(rawBalance, decimals);
         const parts = formatted.split(".");
         const intPart = BigInt(parts[0]).toLocaleString();
         const decPart = parts[1] ? parts[1].slice(0, 4) : "";
+        const display = `${intPart}${decPart ? "." + decPart : ""}`;
 
-        wlotusBalance.innerText = `${intPart}${decPart ? "." + decPart : ""} WLOTUS`;
+        wlotusBalance.innerText = `${display} WLOTUS`;
+
+        // Portfolio value using BigInt-safe math (approx via Number is fine for display)
+        const numTokens = Number(formatted);
+        portfolioValText.innerText = `$${(numTokens * DISPLAY_PRICE).toLocaleString(undefined, { maximumFractionDigits: 2 })} USDT`;
       } catch (err) {
         console.error("Balance fetch error:", err);
         wlotusBalance.innerText = "Error loading";
@@ -1097,13 +1053,10 @@
     }
 
     /* ============================================================
-       9. NETWORK
+       11. NETWORK
        ============================================================ */
     async function updateNetworkBadge() {
-      if (!provider) {
-        networkBadge.innerText = "—";
-        return;
-      }
+      if (!provider) { networkBadge.innerText = "—"; return; }
 
       try {
         const net = await provider.getNetwork();
@@ -1123,8 +1076,8 @@
     async function switchNetworkIfNeeded() {
       if (!EXPECTED_CHAIN_ID) return;
 
-      const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
-      if (currentChainId.toLowerCase() === EXPECTED_CHAIN_ID.toLowerCase()) return;
+      const current = await window.ethereum.request({ method: "eth_chainId" });
+      if (current.toLowerCase() === EXPECTED_CHAIN_ID.toLowerCase()) return;
 
       try {
         await window.ethereum.request({
@@ -1140,14 +1093,13 @@
     }
 
     /* ============================================================
-       10. WALLET EVENTS
+       12. WALLET EVENTS
        ============================================================ */
     function setupWalletEvents() {
       if (!window.ethereum || window.ethereum._lotusListeners) return;
 
       window.ethereum.on("accountsChanged", handleAccountsChanged);
       window.ethereum.on("chainChanged", () => window.location.reload());
-
       window.ethereum._lotusListeners = true;
     }
 
@@ -1156,21 +1108,18 @@
         resetWallet();
         return;
       }
-
       userAddress = accounts[0];
-
       if (provider) {
         signer = provider.getSigner();
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
       }
-
       updateWalletUI();
       await updateNetworkBadge();
       await fetchTokenBalance();
     }
 
     /* ============================================================
-       11. PRESALE CALCULATOR
+       13. PRESALE CALCULATOR
        ============================================================ */
     function calculatePresale() {
       const usdt = parseFloat(document.getElementById("usdtInput").value);
@@ -1184,28 +1133,8 @@
     }
 
     /* ============================================================
-       12. MODAL CONTROLS
+       14. MODALS
        ============================================================ */
-    function openAuthModal(mode) {
-      document.getElementById("authModal").classList.add("active");
-      switchAuthTab(mode);
-    }
-    function closeAuthModal() {
-      document.getElementById("authModal").classList.remove("active");
-    }
-
-    function switchAuthTab(mode) {
-      document.getElementById("loginForm").style.display  = mode === "login"  ? "block" : "none";
-      document.getElementById("signupForm").style.display = mode === "signup" ? "block" : "none";
-      document.getElementById("tabLoginBtn").classList.toggle("active",  mode === "login");
-      document.getElementById("tabSignupBtn").classList.toggle("active", mode === "signup");
-    }
-
-    function handleAuthSubmit(mode) {
-      alert(`${mode === "login" ? "Login" : "Account Registration"} Successful! Welcome to Lotus Coin Portal.`);
-      closeAuthModal();
-    }
-
     function openBuyModal()  { document.getElementById("buyModal").classList.add("active"); }
     function closeBuyModal() { document.getElementById("buyModal").classList.remove("active"); }
 
@@ -1217,34 +1146,18 @@
       document.getElementById("paypalTab").style.display = tabName === "paypal" ? "block" : "none";
     }
 
-    function selectWidgetPayment(el) {
-      document.querySelectorAll(".payment-pills .pill-btn").forEach(p => p.classList.remove("active"));
-      el.classList.add("active");
-      const method = el.dataset.method;
-
-      // Auto-open modal and preset the correct tab
-      openBuyModal();
-      const tabBtn = document.querySelector(`#buyModal .auth-tab-btn[data-tab="${method}"]`);
-      if (tabBtn) tabBtn.click();
-    }
-
-    /* ============================================================
-       13. PURCHASE
-       ============================================================ */
     function submitPurchase() {
       const addr = (document.getElementById("modalWalletAddr").value || "").trim();
-
       if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
         alert("Please enter a valid wallet address (0x... 40 hex characters).");
         return;
       }
-
-      alert("Payment Request Submitted! Tokens will be dispatched shortly to your wallet address.");
+      alert("Payment Request Received! Tokens dispatched upon block confirmation.");
       closeBuyModal();
     }
 
     /* ============================================================
-       14. MODAL OVERLAY CLICK-TO-CLOSE
+       15. MODAL CLOSE HANDLERS
        ============================================================ */
     ["authModal", "buyModal"].forEach(id => {
       const el = document.getElementById(id);
@@ -1253,7 +1166,6 @@
       });
     });
 
-    // ESC key closes modals
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") {
         closeAuthModal();
