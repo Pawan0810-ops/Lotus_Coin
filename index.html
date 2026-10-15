@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lotus Coin ($LOTUS) - Professional Bitcoin & Solana Grade Web3 Portal</title>
+  <title>Lotus Coin ($LOTUS) - Professional Web3 Portal</title>
 
   <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -345,7 +345,6 @@
       margin-bottom: 12px;
     }
 
-    /* Like and Comment Interactivity */
     .blog-actions {
       display: flex;
       gap: 10px;
@@ -844,7 +843,8 @@
       }
     };
 
-    function initLotusChart(tf = '15m') {
+    function initLotusChart(tf) {
+      if (!tf) tf = '15m';
       const ctx = document.getElementById('lotusDedicatedChart').getContext('2d');
       const tfObj = timeframeData[tf];
 
@@ -888,7 +888,7 @@
               displayColors: false,
               callbacks: {
                 label: function(context) {
-                  return `LOTUS Price: $${context.parsed.y.toFixed(4)} USDT`;
+                  return 'LOTUS Price: $' + context.parsed.y.toFixed(4) + ' USDT';
                 }
               }
             }
@@ -912,12 +912,12 @@
     }
 
     function switchTimeframe(tf, btnElem) {
-      document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
       btnElem.classList.add('active');
       initLotusChart(tf);
     }
 
-    window.addEventListener('DOMContentLoaded', () => initLotusChart('15m'));
+    window.addEventListener('DOMContentLoaded', function() { initLotusChart('15m'); });
 
     // Default Seed Blog Posts
     const defaultBlogs = [
@@ -975,8 +975,8 @@
     function switchAuthTab(mode) {
       document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
       document.getElementById('signupForm').style.display = mode === 'signup' ? 'block' : 'none';
-      document.getElementById('tabLoginBtn').className = `auth-tab-btn ${mode === 'login' ? 'active' : ''}`;
-      document.getElementById('tabSignupBtn').className = `auth-tab-btn ${mode === 'signup' ? 'active' : ''}`;
+      document.getElementById('tabLoginBtn').className = 'auth-tab-btn ' + (mode === 'login' ? 'active' : '');
+      document.getElementById('tabSignupBtn').className = 'auth-tab-btn ' + (mode === 'signup' ? 'active' : '');
       document.getElementById('authErrorMsg').style.display = 'none';
     }
 
@@ -993,20 +993,20 @@
       }
 
       const users = getStoredUsers();
-      if (users.some(u => u.email === email)) {
+      if (users.some(function(u) { return u.email === email; })) {
         errorElem.innerText = "An account with this email already exists! Please Login.";
         errorElem.style.display = 'block';
         return;
       }
 
-      const newUser = { name, email, password: pass, tokens: 0, investedUsdt: 0 };
+      const newUser = { name: name, email: email, password: pass, tokens: 0, investedUsdt: 0 };
       users.push(newUser);
       saveStoredUsers(users);
 
       localStorage.setItem('lotus_active_session', JSON.stringify(newUser));
       checkUserSession();
       closeAuthModal();
-      alert(`🎉 Registration Successful! Welcome ${name}.`);
+      alert("🎉 Registration Successful! Welcome " + name + ".");
     }
 
     function handleLogin() {
@@ -1021,7 +1021,7 @@
       }
 
       const users = getStoredUsers();
-      const match = users.find(u => u.email === email && u.password === pass);
+      const match = users.find(function(u) { return u.email === email && u.password === pass; });
 
       if (!match) {
         errorElem.innerText = "Invalid credentials. Please verify your password or Sign Up!";
@@ -1042,8 +1042,8 @@
         document.getElementById('userProfileBadge').style.display = 'inline-flex';
         document.getElementById('loggedUserName').innerText = user.name;
 
-        document.getElementById('wlotusBalance').innerText = `${(user.tokens || 0).toLocaleString()} WLOTUS`;
-        document.getElementById('portfolioValText').innerText = `$${((user.tokens || 0) * 0.0524).toFixed(2)} USDT`;
+        document.getElementById('wlotusBalance').innerText = ((user.tokens || 0).toLocaleString()) + " WLOTUS";
+        document.getElementById('portfolioValText').innerText = "$" + (((user.tokens || 0) * 0.0524).toFixed(2)) + " USDT";
       } else {
         document.getElementById('authButtonsGroup').style.display = 'flex';
         document.getElementById('userProfileBadge').style.display = 'none';
@@ -1100,7 +1100,7 @@
 
     function likePost(blogId) {
       const blogs = getStoredBlogs();
-      const idx = blogs.findIndex(b => b.id === blogId);
+      const idx = blogs.findIndex(function(b) { return b.id === blogId; });
       if (idx !== -1) {
         blogs[idx].likes = (blogs[idx].likes || 0) + 1;
         saveStoredBlogs(blogs);
@@ -1109,7 +1109,7 @@
     }
 
     function addComment(blogId) {
-      const inputElem = document.getElementById(`comment_input_${blogId}`);
+      const inputElem = document.getElementById('comment_input_' + blogId);
       const commentText = inputElem.value.trim();
       if (!commentText) return;
 
@@ -1117,7 +1117,7 @@
       const authorName = activeUserJson ? JSON.parse(activeUserJson).name : "Guest_Trader";
 
       const blogs = getStoredBlogs();
-      const idx = blogs.findIndex(b => b.id === blogId);
+      const idx = blogs.findIndex(function(b) { return b.id === blogId; });
       if (idx !== -1) {
         if (!blogs[idx].comments) blogs[idx].comments = [];
         blogs[idx].comments.push({ author: authorName, text: commentText });
@@ -1131,47 +1131,17 @@
       const container = document.getElementById('blogGridContainer');
       container.innerHTML = '';
 
-      blogs.forEach(b => {
+      blogs.forEach(function(b) {
         let commentsHtml = '';
         if (b.comments && b.comments.length > 0) {
-          b.comments.forEach(c => {
-            commentsHtml += `<div class="comment-item"><span class="comment-author">${c.author}:</span> ${c.text}</div>`;
+          b.comments.forEach(function(c) {
+            commentsHtml += '<div class="comment-item"><span class="comment-author">' + c.author + ':</span> ' + c.text + '</div>';
           });
         } else {
-          commentsHtml = `<div style="font-size:0.75rem; color:var(--text-muted);">No comments yet. Be the first to comment!</div>`;
+          commentsHtml = '<div style="font-size:0.75rem; color:var(--text-muted);">No comments yet. Be the first to comment!</div>';
         }
 
-        container.innerHTML += `
-          <div class="blog-card">
-            <div>
-              <span class="blog-tag">${b.category}</span>
-              <h4>${b.title}</h4>
-              <p>${b.content}</p>
-            </div>
-            
-            <div>
-              <div class="blog-meta">
-                <span><i class="fa-solid fa-crown" style="color:var(--gold);"></i> ${b.author}</span>
-                <span><i class="fa-solid fa-calendar"></i> ${b.date}</span>
-              </div>
-
-              <div class="blog-actions">
-                <button class="btn-like" onclick="likePost(${b.id})">❤️ Like <span class="like-count">(${b.likes || 0})</span></button>
-                <span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-comments"></i> ${b.comments ? b.comments.length : 0} Comments</span>
-              </div>
-
-              <div class="comments-wrapper">
-                <div style="font-size:0.78rem; font-weight:bold; margin-bottom:6px; color:var(--text-main);">Comments</div>
-                <div>${commentsHtml}</div>
-                
-                <div class="comment-input-box">
-                  <input type="text" id="comment_input_${b.id}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') addComment(${b.id})">
-                  <button class="btn btn-auth" style="padding:4px 10px; font-size:0.75rem;" onclick="addComment(${b.id})">Post</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
+        container.innerHTML += '<div class="blog-card"><div><span class="blog-tag">' + b.category + '</span><h4>' + b.title + '</h4><p>' + b.content + '</p></div><div><div class="blog-meta"><span><i class="fa-solid fa-crown" style="color:var(--gold);"></i> ' + b.author + '</span><span><i class="fa-solid fa-calendar"></i> ' + b.date + '</span></div><div class="blog-actions"><button class="btn-like" onclick="likePost(' + b.id + ')">❤️ Like <span class="like-count">(' + (b.likes || 0) + ')</span></button><span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-comments"></i> ' + (b.comments ? b.comments.length : 0) + ' Comments</span></div><div class="comments-wrapper"><div style="font-size:0.78rem; font-weight:bold; margin-bottom:6px; color:var(--text-main);">Comments</div><div>' + commentsHtml + '</div><div class="comment-input-box"><input type="text" id="comment_input_' + b.id + '" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') addComment(' + b.id + ')"><button class="btn btn-auth" style="padding:4px 10px; font-size:0.75rem;" onclick="addComment(' + b.id + ')">Post</button></div></div></div></div>';
       });
     }
     window.addEventListener('DOMContentLoaded', renderBlogPosts);
@@ -1181,7 +1151,7 @@
       const usdt = document.getElementById('usdtInput').value;
       const rate = 100;
       if (usdt && usdt > 0) {
-        document.getElementById('lotusOutput').value = `${(usdt * rate).toLocaleString()} WLOTUS`;
+        document.getElementById('lotusOutput').value = (usdt * rate).toLocaleString() + " WLOTUS";
       } else {
         document.getElementById('lotusOutput').value = '';
       }
@@ -1210,17 +1180,17 @@
       localStorage.setItem('lotus_active_session', JSON.stringify(activeUser));
       
       let users = getStoredUsers();
-      const uIdx = users.findIndex(u => u.email === activeUser.email);
+      const uIdx = users.findIndex(function(u) { return u.email === activeUser.email; });
       if (uIdx !== -1) {
         users[uIdx] = activeUser;
         saveStoredUsers(users);
       }
 
       checkUserSession();
-      alert(`🎉 Buy Order Executed!
+      alert("🎉 Buy Order Executed!
 
-Added: ${newTokens.toLocaleString()} WLOTUS
-New Total: ${activeUser.tokens.toLocaleString()} WLOTUS`);
+Added: " + newTokens.toLocaleString() + " WLOTUS
+New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
     }
 
     function copyContractAddress() {
@@ -1233,7 +1203,7 @@ New Total: ${activeUser.tokens.toLocaleString()} WLOTUS`);
     function openBuyModal() { document.getElementById('buyModal').style.display = 'flex'; }
     function closeBuyModal() { document.getElementById('buyModal').style.display = 'none'; }
     function selectTab(btn, tabName) {
-      document.querySelectorAll('#buyModal .auth-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#buyModal .auth-tab-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
       document.getElementById('upiTab').style.display = tabName === 'upi' ? 'block' : 'none';
       document.getElementById('cardTab').style.display = tabName === 'card' ? 'block' : 'none';
@@ -1250,9 +1220,9 @@ New Total: ${activeUser.tokens.toLocaleString()} WLOTUS`);
           signer = provider.getSigner();
           contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 
-          const shortAddr = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
+          const shortAddr = userAddress.substring(0, 6) + "..." + userAddress.substring(userAddress.length - 4);
           document.getElementById("modalWalletAddr").value = userAddress;
-          document.getElementById("connectWalletBtn").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${shortAddr}`;
+          document.getElementById("connectWalletBtn").innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + shortAddr;
         } catch (error) { alert("Wallet connection failed!"); }
       } else { alert("MetaMask extension not found!"); }
     }
