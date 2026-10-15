@@ -192,7 +192,6 @@
       transform: translateY(-2px) scale(1.02);
       box-shadow: 0 0 35px rgba(16, 185, 129, 0.6);
     }
-
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .btn-buy {
@@ -240,7 +239,6 @@
       font-weight: 700;
       color: var(--neon-cyan);
     }
-
     .user-profile-badge.active { display: inline-flex; }
 
     .logout-btn {
@@ -254,7 +252,7 @@
     }
     .logout-btn:hover { transform: scale(1.15); }
 
-    /* ---------- Cards ---------- */
+    /* ---------- Glass cards ---------- */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
@@ -434,6 +432,15 @@
       color: #fff;
     }
 
+    .auth-error-msg {
+      color: var(--neon-red);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      display: none;
+      font-weight: 600;
+    }
+    .auth-error-msg.active { display: block; }
+
     /* ---------- Footer ---------- */
     footer {
       border-top: 1px solid var(--glass-border);
@@ -502,7 +509,7 @@
 
       <div class="user-profile-badge" id="userProfileBadge">
         <i class="fa-solid fa-circle-user"></i>
-        <span id="loggedUserName">Trader</span>
+        <span id="loggedUserName">Guest</span>
         <button class="logout-btn" onclick="logoutUser()" type="button" title="Logout">
           <i class="fa-solid fa-power-off"></i>
         </button>
@@ -519,7 +526,7 @@
 
   <!-- Workspace -->
   <div class="trading-workspace" id="chart">
-    <!-- Left: Chart + Orderbook -->
+    <!-- Left column -->
     <div>
       <div class="glass-card">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -530,7 +537,7 @@
               <span style="font-size: 0.8rem; background: rgba(16,185,129,0.15); color: var(--neon-green); padding: 2px 8px; border-radius: 6px;">+14.2%</span>
             </h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
-              Live market overview (illustrative — not real-time)
+              Live market overview (illustrative — demo data)
             </p>
           </div>
 
@@ -578,7 +585,7 @@
       </div>
     </div>
 
-    <!-- Right: Portfolio -->
+    <!-- Right column -->
     <div>
       <div class="glass-card" id="presale">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 8px;">
@@ -610,7 +617,7 @@
           </div>
         </div>
 
-        <h4 style="font-size: 0.95rem; margin-bottom: 12px; font-weight: 700;">Place Buy Order</h4>
+        <h4 style="font-size: 0.95rem; margin-bottom: 12px; font-weight: 700;">Place Buy Order (Demo)</h4>
 
         <div class="input-group">
           <label for="usdtInput">You Spend (USDT)</label>
@@ -622,12 +629,12 @@
           <input type="text" id="lotusOutput" class="input-field" placeholder="0 WLOTUS" readonly style="color: var(--neon-green); font-weight: 800;" />
         </div>
 
-        <button class="btn btn-buy" style="width: 100%; justify-content: center; padding: 13px;" onclick="openBuyModal()" type="button">
+        <button class="btn btn-buy" style="width: 100%; justify-content: center; padding: 13px;" onclick="executeBuyOrder()" type="button">
           ⚡ Execute Buy Order
         </button>
 
         <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; text-align: center; line-height: 1.5;">
-          Demo mode — real purchase requires a deployed presale contract.
+          Demo mode — tokens added to your local session only. Real purchases require a deployed presale contract.
         </p>
       </div>
     </div>
@@ -643,37 +650,45 @@
         <button class="auth-tab-btn" id="tabSignupBtn" onclick="switchAuthTab('signup')" type="button">Sign Up</button>
       </div>
 
-      <form id="loginForm" onsubmit="event.preventDefault(); handleAuthSubmit('login');">
+      <div class="auth-error-msg" id="authErrorMsg"></div>
+
+      <!-- Login -->
+      <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
         <div class="input-group">
-          <label for="loginUsernameInput">Email or Username</label>
-          <input type="text" id="loginUsernameInput" class="input-field" placeholder="e.g. Pawan Trader" required />
+          <label for="loginEmailInput">Email Address</label>
+          <input type="email" id="loginEmailInput" class="input-field" placeholder="investor@lotus.net" required />
         </div>
         <div class="input-group">
-          <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" class="input-field" placeholder="••••••••" required minlength="6" />
+          <label for="loginPassInput">Password</label>
+          <input type="password" id="loginPassInput" class="input-field" placeholder="••••••••" required minlength="6" />
         </div>
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" type="submit">
           <i class="fa-solid fa-right-to-bracket"></i> Login &amp; Track Market
         </button>
       </form>
 
-      <form id="signupForm" style="display: none;" onsubmit="event.preventDefault(); handleAuthSubmit('signup');">
+      <!-- Signup -->
+      <form id="signupForm" style="display: none;" onsubmit="event.preventDefault(); handleSignup();">
         <div class="input-group">
           <label for="signupNameInput">Full Name</label>
           <input type="text" id="signupNameInput" class="input-field" placeholder="e.g. Pawan" required />
         </div>
         <div class="input-group">
-          <label for="signupEmail">Email Address</label>
-          <input type="email" id="signupEmail" class="input-field" placeholder="investor@lotus.net" required />
+          <label for="signupEmailInput">Email Address</label>
+          <input type="email" id="signupEmailInput" class="input-field" placeholder="investor@lotus.net" required />
         </div>
         <div class="input-group">
-          <label for="signupPassword">Password</label>
-          <input type="password" id="signupPassword" class="input-field" placeholder="••••••••" required minlength="6" />
+          <label for="signupPassInput">Create Password</label>
+          <input type="password" id="signupPassInput" class="input-field" placeholder="••••••••" required minlength="6" />
         </div>
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" type="submit">
           <i class="fa-solid fa-user-check"></i> Register Account
         </button>
       </form>
+
+      <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 14px; text-align: center; line-height: 1.5;">
+        ⚠️ Demo login — data is stored locally in your browser only. Do NOT reuse a real password.
+      </p>
     </div>
   </div>
 
@@ -721,6 +736,10 @@
       <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="submitPurchase()" type="button">
         Complete Purchase
       </button>
+
+      <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 12px; text-align: center; line-height: 1.5;">
+        Demo checkout — no real payment will be processed.
+      </p>
     </div>
   </div>
 
@@ -750,12 +769,12 @@
     // Optional auto network switch: "0x38" = BSC Mainnet, "0x61" = BSC Testnet
     const EXPECTED_CHAIN_ID = null;
 
-    // Anti-fraud IP check — DISABLED by default. ipapi.co free tier
-    // `security` field nahi deta. Paid API ke saath enable karein.
+    // Anti-fraud IP check — DISABLED by default (ipapi.co free tier
+    // `security` field nahi deta). Paid API ke saath enable karein.
     const ENABLE_IP_CHECK = false;
 
-    const PRESALE_RATE = 100;  // 1 USDT = 100 WLOTUS
-    const DISPLAY_PRICE = 0.0524; // USDT per WLOTUS for portfolio display
+    const PRESALE_RATE = 100;      // 1 USDT = 100 WLOTUS
+    const DISPLAY_PRICE = 0.0524;  // USDT per WLOTUS for portfolio display
 
     /* ============================================================
        2. STATE
@@ -776,6 +795,7 @@
     const themeBtn = document.getElementById("themeBtn");
     const modalWalletAddr = document.getElementById("modalWalletAddr");
     const portfolioValText = document.getElementById("portfolioValText");
+    const authErrorMsg = document.getElementById("authErrorMsg");
 
     /* ============================================================
        4. INIT
@@ -803,7 +823,6 @@
       themeBtn.innerHTML = isLight ? "☀️" : "🌙";
       localStorage.setItem("lotus-theme", isLight ? "light" : "dark");
 
-      // Update chart colors for theme
       if (priceChart) {
         const grid = isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.05)";
         const tick = isLight ? "#64748b" : "#94a3b8";
@@ -822,7 +841,6 @@
       try {
         const res = await fetch("https://ipapi.co/json/");
         const data = await res.json();
-
         if (data.security && (data.security.is_vpn || data.security.is_proxy || data.security.is_tor)) {
           document.body.innerHTML = `
             <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#050714;color:#ef4444;text-align:center;padding:20px;font-family:sans-serif;">
@@ -875,7 +893,6 @@
       });
     }
 
-    // Timeframe data presets
     const TF_DATA = {
       "1M":  { labels: ["-30m","-25m","-20m","-15m","-10m","-5m","0m"],
                data: [0.0395, 0.0405, 0.0418, 0.0402, 0.0430, 0.0480, 0.0524] },
@@ -900,12 +917,36 @@
     }
 
     /* ============================================================
-       8. USER AUTH (demo only — localStorage)
+       8. DEMO AUTH (localStorage — NOT for production)
        ============================================================ */
+    const USERS_KEY = "lotus_users_db";
+    const SESSION_KEY = "lotus_active_session";
+
+    function getStoredUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+      } catch { return []; }
+    }
+
+    function saveStoredUsers(usersArr) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(usersArr));
+    }
+
+    function showAuthError(msg) {
+      authErrorMsg.innerText = msg;
+      authErrorMsg.classList.add("active");
+    }
+
+    function hideAuthError() {
+      authErrorMsg.classList.remove("active");
+    }
+
     function openAuthModal(mode) {
       document.getElementById("authModal").classList.add("active");
+      hideAuthError();
       switchAuthTab(mode);
     }
+
     function closeAuthModal() {
       document.getElementById("authModal").classList.remove("active");
     }
@@ -915,39 +956,90 @@
       document.getElementById("signupForm").style.display = mode === "signup" ? "block" : "none";
       document.getElementById("tabLoginBtn").classList.toggle("active",  mode === "login");
       document.getElementById("tabSignupBtn").classList.toggle("active", mode === "signup");
+      hideAuthError();
     }
 
-    function handleAuthSubmit(mode) {
-      let name;
-      if (mode === "login") {
-        name = (document.getElementById("loginUsernameInput").value || "").trim() || "Trader";
-      } else {
-        name = (document.getElementById("signupNameInput").value || "").trim() || "Investor";
+    function handleSignup() {
+      const name  = document.getElementById("signupNameInput").value.trim();
+      const email = document.getElementById("signupEmailInput").value.trim().toLowerCase();
+      const pass  = document.getElementById("signupPassInput").value;
+
+      if (!name || !email || !pass) {
+        return showAuthError("Please fill in all fields.");
+      }
+      if (pass.length < 6) {
+        return showAuthError("Password must be at least 6 characters.");
       }
 
-      localStorage.setItem("lotus_user", name);
+      const users = getStoredUsers();
+      if (users.find(u => u.email === email)) {
+        return showAuthError("An account with this email already exists. Please login.");
+      }
+
+      const newUser = {
+        name, email, password: pass,
+        tokens: 0, investedUsdt: 0
+      };
+      users.push(newUser);
+      saveStoredUsers(users);
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
       restoreUserSession();
       closeAuthModal();
-      alert(`${mode === "login" ? "Logged in" : "Registered"} as ${name}.`);
+      alert(`🎉 Account created for ${name}!`);
+    }
+
+    function handleLogin() {
+      const email = document.getElementById("loginEmailInput").value.trim().toLowerCase();
+      const pass  = document.getElementById("loginPassInput").value;
+
+      if (!email || !pass) {
+        return showAuthError("Please enter email and password.");
+      }
+
+      const user = getStoredUsers().find(u => u.email === email && u.password === pass);
+      if (!user) {
+        return showAuthError("Invalid email or password.");
+      }
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+      restoreUserSession();
+      closeAuthModal();
     }
 
     function restoreUserSession() {
-      const user = localStorage.getItem("lotus_user");
+      let activeUser = null;
+      try {
+        activeUser = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      } catch { activeUser = null; }
+
       const authGroup = document.getElementById("authButtonsGroup");
       const badge = document.getElementById("userProfileBadge");
 
-      if (user) {
+      if (activeUser) {
         authGroup.style.display = "none";
         badge.classList.add("active");
-        document.getElementById("loggedUserName").innerText = user;
+        document.getElementById("loggedUserName").innerText = activeUser.name;
+
+        // Show local portfolio only if wallet not connected
+        if (!userAddress) {
+          const tokens = activeUser.tokens || 0;
+          wlotusBalance.innerText = `${tokens.toLocaleString()} WLOTUS`;
+          portfolioValText.innerText = `$${(tokens * DISPLAY_PRICE).toFixed(2)} USDT`;
+        }
       } else {
         authGroup.style.display = "flex";
         badge.classList.remove("active");
+
+        if (!userAddress) {
+          wlotusBalance.innerText = "0.00 WLOTUS";
+          portfolioValText.innerText = "$0.00 USDT";
+        }
       }
     }
 
     function logoutUser() {
-      localStorage.removeItem("lotus_user");
+      localStorage.removeItem(SESSION_KEY);
       restoreUserSession();
     }
 
@@ -973,7 +1065,6 @@
         }
 
         userAddress = accounts[0];
-
         provider = new ethers.providers.Web3Provider(window.ethereum);
         signer = provider.getSigner();
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
@@ -981,7 +1072,6 @@
         updateWalletUI();
         await updateNetworkBadge();
         await fetchTokenBalance();
-
         setupWalletEvents();
       } catch (err) {
         console.error("Wallet connect error:", err);
@@ -1000,7 +1090,6 @@
       connectWalletBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${short}`;
       walletAddressText.innerText = short;
       walletAddressText.style.color = "var(--neon-cyan)";
-
       if (modalWalletAddr) modalWalletAddr.value = userAddress;
     }
 
@@ -1013,9 +1102,10 @@
       walletAddressText.innerText = "Not Connected";
       walletAddressText.style.color = "";
       connectWalletBtn.innerHTML = `<i class="fa-solid fa-wallet"></i> Wallet`;
-      wlotusBalance.innerText = "0.00 WLOTUS";
       networkBadge.innerText = "—";
-      portfolioValText.innerText = "$0.00 USDT";
+
+      // Restore local session portfolio if logged in
+      restoreUserSession();
     }
 
     function shortAddress(addr) {
@@ -1024,7 +1114,7 @@
     }
 
     /* ============================================================
-       10. BALANCE
+       10. BALANCE (on-chain)
        ============================================================ */
     async function fetchTokenBalance() {
       if (!contract || !userAddress) return;
@@ -1042,8 +1132,6 @@
         const display = `${intPart}${decPart ? "." + decPart : ""}`;
 
         wlotusBalance.innerText = `${display} WLOTUS`;
-
-        // Portfolio value using BigInt-safe math (approx via Number is fine for display)
         const numTokens = Number(formatted);
         portfolioValText.innerText = `$${(numTokens * DISPLAY_PRICE).toLocaleString(undefined, { maximumFractionDigits: 2 })} USDT`;
       } catch (err) {
@@ -1057,7 +1145,6 @@
        ============================================================ */
     async function updateNetworkBadge() {
       if (!provider) { networkBadge.innerText = "—"; return; }
-
       try {
         const net = await provider.getNetwork();
         const names = {
@@ -1075,7 +1162,6 @@
 
     async function switchNetworkIfNeeded() {
       if (!EXPECTED_CHAIN_ID) return;
-
       const current = await window.ethereum.request({ method: "eth_chainId" });
       if (current.toLowerCase() === EXPECTED_CHAIN_ID.toLowerCase()) return;
 
@@ -1097,7 +1183,6 @@
        ============================================================ */
     function setupWalletEvents() {
       if (!window.ethereum || window.ethereum._lotusListeners) return;
-
       window.ethereum.on("accountsChanged", handleAccountsChanged);
       window.ethereum.on("chainChanged", () => window.location.reload());
       window.ethereum._lotusListeners = true;
@@ -1133,7 +1218,46 @@
     }
 
     /* ============================================================
-       14. MODALS
+       14. DEMO BUY ORDER (local session only)
+       ============================================================ */
+    function executeBuyOrder() {
+      let activeUser = null;
+      try {
+        activeUser = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+      } catch {}
+
+      if (!activeUser) {
+        alert("Please login or sign up first to place a demo buy order.");
+        openAuthModal("login");
+        return;
+      }
+
+      const usdt = parseFloat(document.getElementById("usdtInput").value);
+      if (!usdt || usdt <= 0) {
+        alert("Please enter a valid USDT amount.");
+        return;
+      }
+
+      const newTokens = usdt * PRESALE_RATE;
+      activeUser.tokens = (activeUser.tokens || 0) + newTokens;
+      activeUser.investedUsdt = (activeUser.investedUsdt || 0) + usdt;
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify(activeUser));
+
+      // Update stored users DB
+      const users = getStoredUsers();
+      const idx = users.findIndex(u => u.email === activeUser.email);
+      if (idx !== -1) {
+        users[idx] = activeUser;
+        saveStoredUsers(users);
+      }
+
+      restoreUserSession();
+      alert(`🎉 Demo buy order recorded!\n\nAdded: ${newTokens.toLocaleString()} WLOTUS\nTotal: ${activeUser.tokens.toLocaleString()} WLOTUS`);
+    }
+
+    /* ============================================================
+       15. MODALS
        ============================================================ */
     function openBuyModal()  { document.getElementById("buyModal").classList.add("active"); }
     function closeBuyModal() { document.getElementById("buyModal").classList.remove("active"); }
@@ -1152,12 +1276,12 @@
         alert("Please enter a valid wallet address (0x... 40 hex characters).");
         return;
       }
-      alert("Payment Request Received! Tokens dispatched upon block confirmation.");
+      alert("Demo checkout — no real payment was processed.");
       closeBuyModal();
     }
 
     /* ============================================================
-       15. MODAL CLOSE HANDLERS
+       16. MODAL CLOSE HANDLERS
        ============================================================ */
     ["authModal", "buyModal"].forEach(id => {
       const el = document.getElementById(id);
