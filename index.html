@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lotus Coin ($LOTUS) — Professional Trading Terminal</title>
+  <title>Lotus Coin ($LOTUS) — Dedicated Trading Terminal</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- Web3 + TradingView -->
+  <!-- Web3 + Charts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
     :root {
@@ -24,6 +24,8 @@
       --input-bg: rgba(0, 0, 0, 0.4);
       --subtle-bg: rgba(255, 255, 255, 0.06);
       --subtle-bg-hover: rgba(255, 255, 255, 0.14);
+      --chart-grid: rgba(255, 255, 255, 0.04);
+      --chart-tick: #94a3b8;
 
       --neon-cyan: #06b6d4;
       --neon-purple: #8b5cf6;
@@ -54,6 +56,9 @@
       --input-bg: rgba(0, 0, 0, 0.04);
       --subtle-bg: rgba(0, 0, 0, 0.04);
       --subtle-bg-hover: rgba(0, 0, 0, 0.08);
+      --chart-grid: rgba(0, 0, 0, 0.06);
+      --chart-tick: #64748b;
+
       --text-main: #0f172a;
       --text-muted: #64748b;
     }
@@ -292,14 +297,41 @@
       margin-bottom: 30px;
     }
 
-    .tradingview-wrapper {
-      height: 520px;
+    .chart-container-box {
+      height: 480px;
       width: 100%;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--glass-border);
+      position: relative;
       margin-top: 15px;
-      background: var(--bg-dark);
+    }
+
+    /* ---------- Timeframe ---------- */
+    .timeframe-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tf-btn {
+      background: var(--subtle-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tf-btn:hover {
+      border-color: var(--neon-cyan);
+      color: var(--text-main);
+    }
+
+    .tf-btn.active {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
     }
 
     /* ---------- Orderbook ---------- */
@@ -362,20 +394,22 @@
 
     .blog-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 20px;
     }
 
     .blog-card {
       background: var(--bg-card);
       border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       transition: transform 0.25s ease, border-color 0.25s ease;
     }
-
     .blog-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       border-color: var(--neon-purple);
     }
 
@@ -399,9 +433,9 @@
 
     .blog-card p {
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       line-height: 1.5;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       word-break: break-word;
     }
 
@@ -411,8 +445,76 @@
       display: flex;
       justify-content: space-between;
       gap: 8px;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
+
+    /* ---------- Blog actions ---------- */
+    .blog-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-like {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--neon-red);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s ease;
+    }
+    .btn-like:hover { background: rgba(239, 68, 68, 0.25); }
+
+    .comments-wrapper {
+      background: var(--input-bg);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .comment-item {
+      font-size: 0.78rem;
+      border-bottom: 1px dashed var(--glass-border);
+      padding: 6px 0;
+      word-break: break-word;
+    }
+
+    .comment-item:last-child { border-bottom: none; }
+
+    .comment-author {
+      font-weight: 800;
+      color: var(--neon-cyan);
+    }
+
+    .comment-input-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .comment-input-box input {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: var(--input-bg);
+      color: var(--text-main);
+      outline: none;
+    }
+    .comment-input-box input:focus { border-color: var(--neon-cyan); }
 
     /* ---------- Modals ---------- */
     .modal-overlay {
@@ -585,8 +687,8 @@
         </button>
       </div>
 
-      <button class="btn btn-gold" onclick="openOwnerBlogModal()" type="button">
-        <i class="fa-solid fa-pen-to-square"></i> Owner Post
+      <button class="btn btn-gold" onclick="openOwnerBlogModal()" title="Only for Website Owner" type="button">
+        <i class="fa-solid fa-lock"></i> Owner Post
       </button>
 
       <button class="btn btn-buy" onclick="openBuyModal()" type="button">
@@ -612,23 +714,27 @@
                 <span style="font-size: 0.78rem; background: rgba(16,185,129,0.15); color: var(--neon-green); padding: 2px 8px; border-radius: 6px;">+14.2%</span>
               </h2>
               <p style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">
-                TradingView interactive chart — reference markets shown
+                Dedicated Lotus market chart (illustrative — demo data)
               </p>
             </div>
 
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button class="btn btn-auth" style="font-size:0.78rem; padding: 6px 12px;" onclick="loadTVChart('BINANCE:BTCUSDT')" type="button">BTC Ref</button>
-              <button class="btn btn-auth" style="font-size:0.78rem; padding: 6px 12px;" onclick="loadTVChart('BINANCE:SOLUSDT')" type="button">SOL Ref</button>
+            <div class="timeframe-bar">
+              <button class="tf-btn" data-tf="1m" onclick="switchTimeframe('1m', this)" type="button">1m</button>
+              <button class="tf-btn active" data-tf="15m" onclick="switchTimeframe('15m', this)" type="button">15m</button>
+              <button class="tf-btn" data-tf="1h" onclick="switchTimeframe('1h', this)" type="button">1h</button>
+              <button class="tf-btn" data-tf="1d" onclick="switchTimeframe('1d', this)" type="button">1d</button>
             </div>
           </div>
 
-          <div class="tradingview-wrapper" id="tv_chart_container"></div>
+          <div class="chart-container-box">
+            <canvas id="lotusDedicatedChart"></canvas>
+          </div>
         </div>
 
         <!-- Orderbook -->
         <div class="glass-card" style="margin-top: 20px;" id="orderbook">
           <h3 style="font-size: 1.05rem; margin-bottom: 10px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <span>📖 Order Book &amp; Trades</span>
+            <span>📖 $LOTUS Order Book</span>
             <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Demo data</span>
           </h3>
 
@@ -725,14 +831,11 @@
     <div style="margin-top: 50px;" id="news">
       <div class="blog-section-header">
         <div>
-          <h2 style="font-size: 1.7rem; font-weight: 900;">📰 Ecosystem News &amp; Official Blog</h2>
+          <h2 style="font-size: 1.7rem; font-weight: 900;">📰 Official Ecosystem Blog</h2>
           <p style="color: var(--text-muted); font-size: 0.9rem;">
-            Official announcements and roadmap updates. Posts stored locally in your browser.
+            Official announcements from Website Owner. Visitors can like &amp; comment.
           </p>
         </div>
-        <button class="btn btn-gold" onclick="openOwnerBlogModal()" type="button">
-          <i class="fa-solid fa-plus"></i> Post Update
-        </button>
       </div>
 
       <div class="blog-grid" id="blogGridContainer"></div>
@@ -847,14 +950,14 @@
     <div class="modal-box" role="dialog" aria-modal="true" aria-label="Publish blog post">
       <button class="modal-close" onclick="closeOwnerBlogModal()" type="button" aria-label="Close">✕</button>
       <h3 style="font-size: 1.25rem; margin-bottom: 6px; color: var(--gold);">
-        <i class="fa-solid fa-pen-to-square"></i> Owner Blog Post
+        <i class="fa-solid fa-user-shield"></i> Owner Blog Post
       </h3>
       <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 15px;">
-        Posts are stored locally in this browser only. Not published to a server.
+        Posts stored locally in this browser. Not published to a server.
       </p>
 
       <div class="input-group">
-        <label for="ownerPasscode">Admin Passcode</label>
+        <label for="ownerPasscode">Owner Passcode</label>
         <input type="password" id="ownerPasscode" class="input-field" placeholder="Enter owner passcode" />
       </div>
 
@@ -874,16 +977,16 @@
       </div>
 
       <div class="input-group">
-        <label for="blogContentInput">Post Content / Summary</label>
+        <label for="blogContentInput">Post Content</label>
         <textarea id="blogContentInput" class="input-field" style="height: 90px; resize: vertical; font-family: 'Plus Jakarta Sans', sans-serif;" placeholder="Write official announcement..." maxlength="500"></textarea>
       </div>
 
       <button class="btn btn-buy" style="width: 100%; justify-content: center; background: var(--gradient-gold); color: #000;" onclick="publishOwnerPost()" type="button">
-        🚀 Publish Blog Post
+        🚀 Authenticate &amp; Publish Post
       </button>
 
       <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 12px; text-align: center; line-height: 1.5;">
-        ⚠️ Demo passcode only. Production mein real authentication (backend + JWT) use karein.
+        ⚠️ Demo passcode only. Production mein real backend auth use karein.
       </p>
     </div>
   </div>
@@ -893,7 +996,6 @@
     <p>© 2026 Lotus Coin Project ($LOTUS). Built for Global Web3 Launch &amp; High-Speed Trading.</p>
   </footer>
 
-  <!-- Scripts -->
   <script>
     /* ============================================================
        1. CONFIGURATION
@@ -911,14 +1013,14 @@
       "function balanceOf(address owner) view returns (uint256)"
     ];
 
-    // Optional auto network switch: "0x38" = BSC Mainnet, "0x61" = BSC Testnet
+    // Optional network auto-switch: "0x38" = BSC Mainnet, "0x61" = BSC Testnet
     const EXPECTED_CHAIN_ID = null;
 
-    // Anti-fraud IP check — DISABLED by default (ipapi.co free tier
-    // `security` field nahi deta).
+    // Anti-fraud IP check — DISABLED (ipapi.co free tier mein
+    // `security` field nahi hota).
     const ENABLE_IP_CHECK = false;
 
-    // Owner passcode — demo only. Production mein NEVER hardcode karein.
+    // Owner passcode — demo only. Production mein NEVER hardcode.
     const OWNER_PASSCODE = "lotus123";
 
     const PRESALE_RATE = 100;      // 1 USDT = 100 WLOTUS
@@ -931,7 +1033,8 @@
     let signer = null;
     let contract = null;
     let userAddress = null;
-    let currentTVSymbol = "BINANCE:BTCUSDT";
+    let lotusChartInstance = null;
+    let currentTF = "15m";
 
     /* ============================================================
        3. DOM
@@ -975,7 +1078,7 @@
       restoreUserSession();
       renderBlogPosts();
       updateContractDisplay();
-      loadTVChart(currentTVSymbol);
+      initLotusChart(currentTF);
       if (ENABLE_IP_CHECK) checkVPN();
     });
 
@@ -994,9 +1097,8 @@
       const isLight = document.body.classList.contains("light-mode");
       themeBtn.innerHTML = isLight ? "☀️" : "🌙";
       localStorage.setItem("lotus-theme", isLight ? "light" : "dark");
-
-      // Re-render chart with new theme
-      loadTVChart(currentTVSymbol);
+      // Re-render chart with new theme but keep active timeframe
+      initLotusChart(currentTF);
     }
 
     /* ============================================================
@@ -1022,40 +1124,103 @@
     }
 
     /* ============================================================
-       8. TRADINGVIEW
+       8. CHART (Lotus dedicated)
        ============================================================ */
-    function loadTVChart(symbolStr) {
-      currentTVSymbol = symbolStr;
-      const container = document.getElementById("tv_chart_container");
-      if (!container) return;
-
-      // Clean previous widget
-      container.innerHTML = "";
-
-      if (typeof TradingView === "undefined") {
-        container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.9rem;">TradingView widget loading failed.</div>`;
-        return;
+    const timeframeData = {
+      "1m": {
+        labels: ["00:01","00:02","00:03","00:04","00:05","00:06","00:07","00:08","00:09","00:10"],
+        prices: [0.0510, 0.0515, 0.0512, 0.0518, 0.0520, 0.0519, 0.0522, 0.0521, 0.0523, 0.0524]
+      },
+      "15m": {
+        labels: ["10:00","10:15","10:30","10:45","11:00","11:15","11:30","11:45","12:00","12:15"],
+        prices: [0.0410, 0.0435, 0.0420, 0.0460, 0.0485, 0.0470, 0.0510, 0.0495, 0.0515, 0.0524]
+      },
+      "1h": {
+        labels: ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"],
+        prices: [0.0380, 0.0400, 0.0425, 0.0450, 0.0440, 0.0480, 0.0500, 0.0490, 0.0510, 0.0524]
+      },
+      "1d": {
+        labels: ["Oct 07","Oct 08","Oct 09","Oct 10","Oct 11","Oct 12","Oct 13","Oct 14","Oct 15","Oct 16"],
+        prices: [0.0100, 0.0150, 0.0220, 0.0310, 0.0290, 0.0350, 0.0420, 0.0480, 0.0500, 0.0524]
       }
+    };
 
-      try {
-        new TradingView.widget({
-          autosize: true,
-          symbol: symbolStr,
-          interval: "15",
-          timezone: "Etc/UTC",
-          theme: document.body.classList.contains("light-mode") ? "light" : "dark",
-          style: "1",
-          locale: "en",
-          toolbar_bg: "#f1f3f6",
-          enable_publishing: false,
-          hide_top_toolbar: false,
-          save_image: false,
-          container_id: "tv_chart_container"
-        });
-      } catch (err) {
-        console.error("TradingView widget error:", err);
-        container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.9rem;">Chart unavailable.</div>`;
-      }
+    function initLotusChart(tf) {
+      currentTF = tf;
+      const canvas = document.getElementById("lotusDedicatedChart");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const tfObj = timeframeData[tf] || timeframeData["15m"];
+
+      const isLight = document.body.classList.contains("light-mode");
+      const gridColor = isLight ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.04)";
+      const tickColor = isLight ? "#64748b" : "#94a3b8";
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, "rgba(16, 185, 129, 0.35)");
+      gradient.addColorStop(1, "rgba(6, 182, 212, 0.01)");
+
+      if (lotusChartInstance) lotusChartInstance.destroy();
+
+      lotusChartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: tfObj.labels,
+          datasets: [{
+            label: "LOTUS / USDT Price ($)",
+            data: tfObj.prices,
+            borderColor: "#10b981",
+            borderWidth: 3,
+            backgroundColor: gradient,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 5,
+            pointHoverRadius: 9,
+            pointBackgroundColor: "#06b6d4",
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#090d21",
+              titleColor: "#06b6d4",
+              bodyColor: "#10b981",
+              borderColor: "#8b5cf6",
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: (context) => `LOTUS Price: $${context.parsed.y.toFixed(4)} USDT`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: gridColor },
+              ticks: { color: tickColor, font: { family: "JetBrains Mono" } }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: {
+                color: tickColor,
+                font: { family: "JetBrains Mono" },
+                callback: (value) => "$" + Number(value).toFixed(4)
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function switchTimeframe(tf, btnElem) {
+      document.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("active"));
+      btnElem.classList.add("active");
+      initLotusChart(tf);
     }
 
     /* ============================================================
@@ -1188,7 +1353,7 @@
         badge.classList.add("active");
         document.getElementById("loggedUserName").innerText = activeUser.name;
 
-        // Show local portfolio only if wallet not connected
+        // Only show local portfolio if wallet NOT connected
         if (!userAddress) {
           const tokens = activeUser.tokens || 0;
           wlotusBalance.innerText = `${tokens.toLocaleString()} WLOTUS`;
@@ -1211,7 +1376,7 @@
     }
 
     /* ============================================================
-       11. OWNER BLOG
+       11. OWNER BLOG + LIKES + COMMENTS
        ============================================================ */
     const BLOGS_KEY = "lotus_blogs_db";
 
@@ -1222,7 +1387,12 @@
         category: "PRESALE UPDATE",
         content: "Public Presale Stage 1 is officially live! Early investors can acquire $WLOTUS at $0.01 per token prior to DEX PancakeSwap liquidity listing.",
         date: "October 14, 2026",
-        author: "Lotus Core Team"
+        author: "Website Owner",
+        likes: 24,
+        comments: [
+          { author: "CryptoTrader_99", text: "Excited for this presale! Joined stage 1." },
+          { author: "Rahul_Mumbai", text: "Great roadmap. When is DEX listing?" }
+        ]
       },
       {
         id: 2,
@@ -1230,7 +1400,11 @@
         category: "DEVELOPMENT",
         content: "The WLOTUS smart contract has successfully passed multi-stage automated security checks with emergency Pausable and Blacklist security logic.",
         date: "October 10, 2026",
-        author: "Security Team"
+        author: "Website Owner",
+        likes: 18,
+        comments: [
+          { author: "Alex_Web3", text: "Security audit passed is a huge positive sign!" }
+        ]
       }
     ];
 
@@ -1259,7 +1433,7 @@
       const content = document.getElementById("blogContentInput").value.trim();
 
       if (pass !== OWNER_PASSCODE) {
-        alert("Incorrect owner passcode.");
+        alert("⛔ Access denied. Incorrect owner passcode.");
         return;
       }
       if (!title || !content) {
@@ -1272,7 +1446,9 @@
         id: Date.now(),
         title, category, content,
         date: new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
-        author: "Website Owner / Admin"
+        author: "Website Owner",
+        likes: 0,
+        comments: []
       };
 
       blogs.unshift(newPost);
@@ -1288,16 +1464,55 @@
       alert("Blog post published (locally).");
     }
 
+    function likePost(blogId) {
+      const blogs = getStoredBlogs();
+      const idx = blogs.findIndex(b => b.id === blogId);
+      if (idx === -1) return;
+
+      blogs[idx].likes = (blogs[idx].likes || 0) + 1;
+      saveStoredBlogs(blogs);
+      renderBlogPosts();
+    }
+
+    function addComment(blogId) {
+      const input = document.getElementById(`comment_input_${blogId}`);
+      if (!input) return;
+
+      const text = input.value.trim();
+      if (!text) return;
+      if (text.length > 300) {
+        alert("Comment too long (max 300 characters).");
+        return;
+      }
+
+      let author = "Guest_Trader";
+      try {
+        const session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+        if (session && session.name) author = session.name;
+      } catch {}
+
+      const blogs = getStoredBlogs();
+      const idx = blogs.findIndex(b => b.id === blogId);
+      if (idx === -1) return;
+
+      if (!Array.isArray(blogs[idx].comments)) blogs[idx].comments = [];
+      blogs[idx].comments.push({ author, text });
+      saveStoredBlogs(blogs);
+      renderBlogPosts();
+    }
+
     function renderBlogPosts() {
       const blogs = getStoredBlogs();
       const container = document.getElementById("blogGridContainer");
       if (!container) return;
 
-      // Use DOM APIs to avoid XSS — safer than innerHTML
       container.innerHTML = "";
+
       blogs.forEach(b => {
         const card = document.createElement("div");
         card.className = "blog-card";
+
+        const top = document.createElement("div");
 
         const tag = document.createElement("span");
         tag.className = "blog-tag";
@@ -1309,24 +1524,116 @@
         const p = document.createElement("p");
         p.textContent = b.content;
 
+        top.appendChild(tag);
+        top.appendChild(h4);
+        top.appendChild(p);
+
+        const bottom = document.createElement("div");
+
         const meta = document.createElement("div");
         meta.className = "blog-meta";
 
         const authorSpan = document.createElement("span");
-        authorSpan.innerHTML = `<i class="fa-solid fa-user-check"></i> `;
-        authorSpan.appendChild(document.createTextNode(b.author || "Admin"));
+        const crown = document.createElement("i");
+        crown.className = "fa-solid fa-crown";
+        crown.style.color = "var(--gold)";
+        authorSpan.appendChild(crown);
+        authorSpan.appendChild(document.createTextNode(" " + (b.author || "Admin")));
 
         const dateSpan = document.createElement("span");
-        dateSpan.innerHTML = `<i class="fa-solid fa-calendar"></i> `;
-        dateSpan.appendChild(document.createTextNode(b.date || ""));
+        const calIcon = document.createElement("i");
+        calIcon.className = "fa-solid fa-calendar";
+        dateSpan.appendChild(calIcon);
+        dateSpan.appendChild(document.createTextNode(" " + (b.date || "")));
 
         meta.appendChild(authorSpan);
         meta.appendChild(dateSpan);
 
-        card.appendChild(tag);
-        card.appendChild(h4);
-        card.appendChild(p);
-        card.appendChild(meta);
+        const actions = document.createElement("div");
+        actions.className = "blog-actions";
+
+        const likeBtn = document.createElement("button");
+        likeBtn.className = "btn-like";
+        likeBtn.type = "button";
+        likeBtn.innerHTML = `❤️ Like <span class="like-count">(${b.likes || 0})</span>`;
+        likeBtn.addEventListener("click", () => likePost(b.id));
+
+        const commentsCount = document.createElement("span");
+        commentsCount.style.fontSize = "0.8rem";
+        commentsCount.style.color = "var(--text-muted)";
+        commentsCount.innerHTML = `<i class="fa-solid fa-comments"></i> ${b.comments ? b.comments.length : 0} Comments`;
+
+        actions.appendChild(likeBtn);
+        actions.appendChild(commentsCount);
+
+        const commentsWrapper = document.createElement("div");
+        commentsWrapper.className = "comments-wrapper";
+
+        const cTitle = document.createElement("div");
+        cTitle.style.fontSize = "0.78rem";
+        cTitle.style.fontWeight = "bold";
+        cTitle.style.marginBottom = "6px";
+        cTitle.style.color = "var(--text-main)";
+        cTitle.textContent = "Comments";
+
+        const commentsList = document.createElement("div");
+        if (b.comments && b.comments.length > 0) {
+          b.comments.forEach(c => {
+            const item = document.createElement("div");
+            item.className = "comment-item";
+
+            const authorEl = document.createElement("span");
+            authorEl.className = "comment-author";
+            authorEl.textContent = c.author + ":";
+
+            item.appendChild(authorEl);
+            item.appendChild(document.createTextNode(" " + c.text));
+            commentsList.appendChild(item);
+          });
+        } else {
+          const empty = document.createElement("div");
+          empty.style.fontSize = "0.75rem";
+          empty.style.color = "var(--text-muted)";
+          empty.textContent = "No comments yet. Be the first to comment!";
+          commentsList.appendChild(empty);
+        }
+
+        const inputBox = document.createElement("div");
+        inputBox.className = "comment-input-box";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = `comment_input_${b.id}`;
+        input.placeholder = "Write a comment...";
+        input.maxLength = 300;
+        input.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addComment(b.id);
+          }
+        });
+
+        const postBtn = document.createElement("button");
+        postBtn.className = "btn btn-auth";
+        postBtn.type = "button";
+        postBtn.style.padding = "4px 10px";
+        postBtn.style.fontSize = "0.75rem";
+        postBtn.textContent = "Post";
+        postBtn.addEventListener("click", () => addComment(b.id));
+
+        inputBox.appendChild(input);
+        inputBox.appendChild(postBtn);
+
+        commentsWrapper.appendChild(cTitle);
+        commentsWrapper.appendChild(commentsList);
+        commentsWrapper.appendChild(inputBox);
+
+        bottom.appendChild(meta);
+        bottom.appendChild(actions);
+        bottom.appendChild(commentsWrapper);
+
+        card.appendChild(top);
+        card.appendChild(bottom);
         container.appendChild(card);
       });
     }
@@ -1398,7 +1705,6 @@
     async function fetchTokenBalance() {
       if (!contract || !userAddress) return;
 
-      // Skip if contract address is still the placeholder
       if (CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000") {
         wlotusBalance.innerText = "Not deployed";
         return;
