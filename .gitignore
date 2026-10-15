@@ -6,3 +6,5 @@ wallet.json
 lotus_node
 .vscode/
 .DS_Store
+lotus_chaindata/
+*.tar.gz
