@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lotus Coin ($LOTUS) - Professional Web3 Portal</title>
+  <title>Lotus Coin ($LOTUS) - Official Web3 Presale & News Portal</title>
 
   <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -182,6 +182,28 @@
       border-color: var(--neon-cyan);
     }
 
+    .btn-social {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-social:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--neon-cyan);
+    }
+
     /* User Profile Badge */
     .user-profile-badge {
       display: none;
@@ -287,21 +309,52 @@
       box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
     }
 
-    /* Blog / News Section */
-    .blog-section-header {
+    /* Steps Guide Box */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .step-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* News Section */
+    .news-section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
 
-    .blog-grid {
+    .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 20px;
     }
 
-    .blog-card {
+    .news-card {
       background: var(--bg-card);
       border: 1px solid var(--glass-border);
       border-radius: 18px;
@@ -311,7 +364,7 @@
       justify-content: space-between;
     }
 
-    .blog-tag {
+    .news-tag {
       font-size: 0.72rem;
       font-weight: 800;
       padding: 3px 8px;
@@ -322,20 +375,20 @@
       margin-bottom: 10px;
     }
 
-    .blog-card h4 {
+    .news-card h4 {
       font-size: 1.1rem;
       margin-bottom: 8px;
       line-height: 1.4;
     }
 
-    .blog-card p {
+    .news-card p {
       color: var(--text-muted);
       font-size: 0.86rem;
       line-height: 1.5;
       margin-bottom: 14px;
     }
 
-    .blog-meta {
+    .news-meta {
       font-size: 0.75rem;
       color: var(--text-muted);
       display: flex;
@@ -345,7 +398,7 @@
       margin-bottom: 12px;
     }
 
-    .blog-actions {
+    .news-actions {
       display: flex;
       gap: 10px;
       align-items: center;
@@ -428,7 +481,7 @@
       border: 1px solid var(--neon-purple);
       border-radius: 24px;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
       padding: 28px;
       position: relative;
       box-shadow: var(--glow-purple);
@@ -492,6 +545,26 @@
       font-size: 0.82rem;
     }
 
+    /* Transaction Table */
+    .tx-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tx-table th, .tx-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .tx-table th {
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
     footer {
       border-top: 1px solid var(--glass-border);
       background: rgba(2, 3, 8, 0.95);
@@ -514,8 +587,8 @@
   <div class="ticker-bar">
     <div class="ticker-items">
       <div><span style="color:var(--text-muted);">LOTUS/USDT:</span> <span class="val-green" id="tickerPrice">$0.0524 (+14.2%)</span></div>
+      <div><span style="color:var(--text-muted);">PRESALE RATE:</span> <span class="val-gold">1 USDT = 100 LOTUS ($0.01)</span></div>
       <div><span style="color:var(--text-muted);">24H HIGH:</span> <span class="val-cyan">$0.0580</span></div>
-      <div><span style="color:var(--text-muted);">24H LOW:</span> <span class="val-cyan">$0.0410</span></div>
       <div><span style="color:var(--text-muted);">24H VOLUME:</span> <span class="val-green">2,840,120 LOTUS</span></div>
       <div><span style="color:var(--text-muted);">HARD CAP:</span> 21,000,000 LOTUS</div>
     </div>
@@ -532,8 +605,8 @@
     <nav>
       <ul>
         <li><a href="#chart">Market Chart</a></li>
-        <li><a href="#presale">Investor Portal</a></li>
-        <li><a href="#news">Ecosystem Blog</a></li>
+        <li><a href="#presale">Buy / Invest</a></li>
+        <li><a href="#news">News & Updates</a></li>
         <li><a href="https://github.com/Pawan0810-ops/Lotus_Coin" target="_blank">GitHub</a></li>
       </ul>
     </nav>
@@ -551,15 +624,45 @@
         <button onclick="logoutUser()" style="background:none; border:none; color:var(--neon-red); cursor:pointer; margin-left:6px;" title="Logout"><i class="fa-solid fa-power-off"></i></button>
       </div>
 
-      <!-- Owner Blog Post Button -->
-      <button class="btn btn-auth" style="border-color: var(--gold); color: var(--gold);" onclick="openOwnerBlogModal()" title="Only for Website Owner"><i class="fa-solid fa-lock"></i> Owner Post</button>
+      <!-- Owner News Post Button -->
+      <button class="btn btn-auth" style="border-color: var(--gold); color: var(--gold);" onclick="openOwnerNewsModal()" title="Only for Website Owner"><i class="fa-solid fa-lock"></i> Owner News Post</button>
 
-      <button class="btn btn-buy" onclick="openBuyModal()"><i class="fa-solid fa-bolt"></i> Buy $LOTUS</button>
+      <button class="btn btn-buy" onclick="openBuyModal()"><i class="fa-solid fa-bolt"></i> Invest $LOTUS</button>
       <button class="btn" id="connectWalletBtn" onclick="connectWallet()"><i class="fa-solid fa-wallet"></i> Wallet</button>
     </div>
   </header>
 
   <div class="container">
+
+    <!-- How Investment Works - Easy Steps for New Users -->
+    <div style="margin-bottom: 24px;">
+      <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--neon-cyan); margin-bottom: 10px;">
+        💡 How to Invest in Lotus Coin ($LOTUS)?
+      </h3>
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div>
+            <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">Create Account / Connect Wallet</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Sign up or connect your MetaMask / Web3 Wallet.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div>
+            <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">Pay via UPI / Card / Crypto</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Enter USDT/INR amount and complete your transaction.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div>
+            <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">Instant $LOTUS Token Credit</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">$LOTUS Tokens are added to your portfolio with instant Transaction Receipt!</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Main Dashboard Grid -->
     <div class="trading-grid" id="chart">
@@ -618,37 +721,47 @@
       <div>
         <div class="glass-card" id="presale">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="font-size: 1.15rem; font-weight: 800;">💰 Investor Terminal</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 800;">💰 Investment Terminal</h3>
             <span style="font-size: 0.78rem; color: var(--gold); font-weight: 800;">Stage 1 Presale</span>
           </div>
 
           <!-- User Portfolio Box -->
           <div style="padding: 15px; background: rgba(0,0,0,0.35); border-radius: 14px; border: 1px solid var(--glass-border); margin-bottom: 18px;">
-            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 3px;">My Portfolio Balance</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 3px;">My Invested Portfolio Valuation</div>
             <h2 id="portfolioValText" style="font-size: 1.7rem; font-weight: 800; color: var(--neon-green); font-family: 'JetBrains Mono';">$0.00 USDT</h2>
             
             <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.82rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px;">
-              <span style="color: var(--text-muted);">$WLOTUS Holdings:</span>
-              <span id="wlotusBalance" style="font-weight: 800; color: var(--neon-cyan);">0.00 WLOTUS</span>
+              <span style="color: var(--text-muted);">$LOTUS Token Balance:</span>
+              <span id="wlotusBalance" style="font-weight: 800; color: var(--neon-cyan);">0.00 LOTUS</span>
             </div>
           </div>
 
           <!-- Instant Presale Purchase Form -->
-          <h4 style="font-size: 0.9rem; margin-bottom: 10px; font-weight: 700;">Instant Presale Purchase</h4>
+          <h4 style="font-size: 0.9rem; margin-bottom: 10px; font-weight: 700;">Instant Token Purchase</h4>
 
           <div class="input-group">
             <label>You Spend (USDT)</label>
-            <input type="number" id="usdtInput" class="input-field" placeholder="e.g. 500" oninput="calculatePresale()">
+            <input type="number" id="usdtInput" class="input-field" placeholder="e.g. 100" oninput="calculatePresale()">
           </div>
 
           <div class="input-group">
-            <label>You Receive ($WLOTUS)</label>
-            <input type="text" id="lotusOutput" class="input-field" placeholder="0 WLOTUS" readonly style="color: var(--neon-green); font-weight: 800;">
+            <label>You Receive ($LOTUS Tokens)</label>
+            <input type="text" id="lotusOutput" class="input-field" placeholder="0 LOTUS" readonly style="color: var(--neon-green); font-weight: 800;">
           </div>
 
           <button class="btn btn-buy" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;" onclick="executeBuyOrder()">
-            ⚡ Execute Buy Order
+            ⚡ Execute Investment & Pay
           </button>
+
+          <!-- Transaction History Section -->
+          <div style="margin-top: 20px; border-top: 1px solid var(--glass-border); padding-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h5 style="font-size: 0.85rem; font-weight: 800; color: var(--neon-cyan);"><i class="fa-solid fa-list-check"></i> My Investment Transactions</h5>
+            </div>
+            <div id="txHistoryContainer">
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">No transactions yet. Complete a purchase above to see your transaction record.</p>
+            </div>
+          </div>
 
           <!-- Smart Contract Bar -->
           <div class="contract-bar">
@@ -662,16 +775,16 @@
       </div>
     </div>
 
-    <!-- Official Owner Blog & Ecosystem Announcements Section -->
+    <!-- Official Owner News & Ecosystem Updates Section -->
     <div style="margin-top: 50px;" id="news">
-      <div class="blog-section-header">
+      <div class="news-section-header">
         <div>
-          <h2 style="font-size: 1.8rem; font-weight: 900;">📰 Official Ecosystem Blog & Announcements</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">Official announcements from Website Owner. Visitors can read, like, and comment below!</p>
+          <h2 style="font-size: 1.8rem; font-weight: 900;">📰 Official Ecosystem News & Updates</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Official announcements & news published directly by Website Owner. Visitors can like and comment below!</p>
         </div>
       </div>
 
-      <div class="blog-grid" id="blogGridContainer"></div>
+      <div class="news-grid" id="newsGridContainer"></div>
     </div>
 
   </div>
@@ -699,7 +812,16 @@
           <input type="password" id="loginPassInput" class="input-field" placeholder="••••••••">
         </div>
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="handleLogin()">
-          <i class="fa-solid fa-right-to-bracket"></i> Login & Track Portfolio
+          <i class="fa-solid fa-right-to-bracket"></i> Login & Track Investment
+        </button>
+
+        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.78rem; color: var(--text-muted);">── OR LOGIN WITH OTHER METHODS ──</div>
+
+        <button class="btn-social" onclick="loginWithMetaMaskQuick()">
+          <i class="fa-solid fa-wallet" style="color: var(--gold);"></i> Login with MetaMask Wallet
+        </button>
+        <button class="btn-social" onclick="loginAsGuestQuick()">
+          <i class="fa-solid fa-user-ninja" style="color: var(--neon-cyan);"></i> Quick Guest Investor Login
         </button>
       </div>
 
@@ -720,6 +842,12 @@
         <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="handleSignup()">
           <i class="fa-solid fa-user-check"></i> Register Account
         </button>
+
+        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.78rem; color: var(--text-muted);">── OR REGISTER WITH OTHER METHODS ──</div>
+
+        <button class="btn-social" onclick="loginWithMetaMaskQuick()">
+          <i class="fa-solid fa-wallet" style="color: var(--gold);"></i> Connect & Register via Wallet
+        </button>
       </div>
     </div>
   </div>
@@ -728,8 +856,8 @@
   <div class="modal-overlay" id="buyModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeBuyModal()">✕</button>
-      <h3 style="font-size: 1.4rem; margin-bottom: 6px;">💳 Buy $LOTUS Tokens</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Choose Payment Method:</p>
+      <h3 style="font-size: 1.4rem; margin-bottom: 6px;">💳 Invest in $LOTUS Tokens</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Choose Payment Method & Amount:</p>
 
       <div class="auth-tabs">
         <button class="auth-tab-btn active" onclick="selectTab(this, 'upi')">🇮🇳 UPI / QR</button>
@@ -737,11 +865,17 @@
         <button class="auth-tab-btn" onclick="selectTab(this, 'paypal')">🅿️ PayPal</button>
       </div>
 
+      <div class="input-group">
+        <label>Investment Amount (USDT / equivalent INR)</label>
+        <input type="number" id="modalPayUsdt" class="input-field" placeholder="100" value="100" oninput="updateModalTokenCalc()">
+        <small style="color: var(--neon-green); font-size: 0.78rem; font-weight: bold; margin-top: 4px; display: block;" id="modalCalculatedTokens">You will receive: 10,000 $LOTUS</small>
+      </div>
+
       <div id="upiTab">
         <div style="text-align: center; padding: 15px; background: rgba(255,255,255,0.04); border-radius: 14px; margin-bottom: 15px;">
-          <p style="font-size: 0.82rem; color: var(--text-muted);">Scan & Pay via GPay / PhonePe / Paytm</p>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Scan & Pay via Google Pay / PhonePe / Paytm / BHIM</p>
           <div style="background: white; padding: 8px; display: inline-block; border-radius: 10px; margin: 10px 0;">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=lotuscoin@upi%26pn=Lotus%20Coin" alt="UPI QR">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=lotuscoin@upi%26pn=Lotus%20Coin%26am=100" alt="UPI QR">
           </div>
           <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: var(--gold);">UPI ID: lotuscoin@upi</p>
         </div>
@@ -763,18 +897,56 @@
         <input type="text" class="input-field" placeholder="0x..." id="modalWalletAddr">
       </div>
 
-      <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="alert('Payment Request Received! Tokens dispatched after block confirmation.')">
-        Complete Purchase
+      <button class="btn btn-buy" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem;" onclick="processModalPayment()">
+        🚀 Confirm Payment & Receive $LOTUS
       </button>
     </div>
   </div>
 
-  <!-- Modal 3: STRICT Owner / Admin Blog Post Modal -->
-  <div class="modal-overlay" id="ownerBlogModal">
+  <!-- Modal 3: Transaction Receipt Modal -->
+  <div class="modal-overlay" id="txReceiptModal">
+    <div class="modal-box" style="border-color: var(--neon-green); box-shadow: var(--glow-green);">
+      <button class="modal-close" onclick="closeTxReceiptModal()">✕</button>
+      
+      <div style="text-align: center; margin-bottom: 16px;">
+        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(16, 185, 129, 0.2); border: 2px solid var(--neon-green); color: var(--neon-green); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h3 style="font-size: 1.4rem; color: var(--neon-green); font-weight: 900;">Investment Successful!</h3>
+        <p style="color: var(--text-muted); font-size: 0.82rem;">Your Lotus Coin investment transaction has been confirmed on BSC Blockchain.</p>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 14px; border: 1px solid var(--glass-border); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; margin-bottom: 18px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-muted);">Transaction Hash:</span>
+          <span id="receiptTxHash" style="color: var(--neon-cyan); font-weight: bold;">0x7f...82a</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-muted);">Amount Paid:</span>
+          <span id="receiptPaidAmt" style="color: white; font-weight: bold;">100 USDT</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-muted);">$LOTUS Credited:</span>
+          <span id="receiptTokensCredited" style="color: var(--neon-green); font-weight: bold;">10,000 LOTUS</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Status:</span>
+          <span style="color: var(--neon-green); font-weight: bold;">● CONFIRMED ON BLOCKCHAIN</span>
+        </div>
+      </div>
+
+      <button class="btn btn-buy" style="width: 100%; justify-content: center;" onclick="closeTxReceiptModal()">
+        Got It / View Portfolio
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal 4: Owner / Admin News Post Modal -->
+  <div class="modal-overlay" id="ownerNewsModal">
     <div class="modal-box">
-      <button class="modal-close" onclick="closeOwnerBlogModal()">✕</button>
-      <h3 style="font-size: 1.3rem; margin-bottom: 6px; color: var(--gold);"><i class="fa-solid fa-user-shield"></i> Website Owner Login to Post</h3>
-      <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 15px;">Only the authorized Website Owner can post announcements. Enter Owner Passcode to proceed.</p>
+      <button class="modal-close" onclick="closeOwnerNewsModal()">✕</button>
+      <h3 style="font-size: 1.3rem; margin-bottom: 6px; color: var(--gold);"><i class="fa-solid fa-newspaper"></i> Website Owner News Publishing</h3>
+      <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 15px;">Only the authorized Website Owner can post official news. Enter Owner Passcode to proceed.</p>
 
       <div class="input-group">
         <label>Owner Passcode Secret</label>
@@ -782,37 +954,37 @@
       </div>
 
       <div class="input-group">
-        <label>Post Title</label>
-        <input type="text" id="blogTitleInput" class="input-field" placeholder="e.g. Lotus Coin Mainnet 2.0 Released">
+        <label>News Headline</label>
+        <input type="text" id="newsTitleInput" class="input-field" placeholder="e.g. Lotus Coin Exchange Listing Date Announced">
       </div>
 
       <div class="input-group">
-        <label>Category Tag</label>
-        <select id="blogCategoryInput" class="input-field" style="background: rgba(0,0,0,0.6);">
-          <option value="ANNOUNCEMENT">ANNOUNCEMENT</option>
+        <label>News Category Tag</label>
+        <select id="newsCategoryInput" class="input-field" style="background: rgba(0,0,0,0.6);">
+          <option value="EXCHANGE NEWS">EXCHANGE NEWS</option>
           <option value="DEVELOPMENT">DEVELOPMENT</option>
+          <option value="PRESALE UPDATE">PRESALE UPDATE</option>
           <option value="PARTNERSHIP">PARTNERSHIP</option>
-          <option value="PRESALE">PRESALE UPDATE</option>
         </select>
       </div>
 
       <div class="input-group">
-        <label>Post Content / Summary</label>
-        <textarea id="blogContentInput" class="input-field" style="height: 90px; resize: none;" placeholder="Write official announcement details here..."></textarea>
+        <label>News Article Content</label>
+        <textarea id="newsContentInput" class="input-field" style="height: 90px; resize: none;" placeholder="Write official news content here..."></textarea>
       </div>
 
-      <button class="btn btn-buy" style="width: 100%; justify-content: center; background: var(--gradient-gold);" onclick="publishOwnerPost()">
-        🚀 Authenticate & Publish Post
+      <button class="btn btn-buy" style="width: 100%; justify-content: center; background: var(--gradient-gold);" onclick="publishOwnerNews()">
+        🚀 Publish Official News
       </button>
     </div>
   </div>
 
   <!-- Footer -->
   <footer>
-    <p>© 2026 Lotus Coin Project ($LOTUS). Built for Bitcoin & Solana Grade High-Speed Web3 Ecosystem.</p>
+    <p>© 2026 Lotus Coin Project ($LOTUS). Built for High-Speed Web3 Investment & News Portal.</p>
   </footer>
 
-  <!-- Web3, Custom Dedicated Lotus Chart, LocalDB Auth, Likes & Comments Script -->
+  <!-- Web3, Custom Dedicated Lotus Chart, LocalDB Auth, Transactions, Likes & Comments Script -->
   <script>
     const CONTRACT_ADDRESS = "0xd9145CCE10a3d5b00c53e8d2e82E11A99FAe8B9A";
     const CONTRACT_ABI = [
@@ -901,8 +1073,7 @@
               grid: { color: 'rgba(255, 255, 255, 0.04)' },
               ticks: {
                 color: '#94a3b8',
-                font: { family: 'JetBrains Mono' },
-                callback: function(value) { return '$' + value.toFixed(4); }
+                font: { family: 'JetBrains Mono', callback: function(value) { return '$' + value.toFixed(4); } }
               }
             }
           }
@@ -918,30 +1089,31 @@
 
     window.addEventListener('DOMContentLoaded', function() { initLotusChart('15m'); });
 
-    const defaultBlogs = [
+    // Seed News Articles
+    const defaultNews = [
       {
         id: 1,
-        title: "Lotus Coin $LOTUS Commercial Presale Stage 1 Live",
+        title: "Lotus Coin ($LOTUS) Official Stage 1 Presale Active",
         category: "PRESALE UPDATE",
-        content: "Public Presale Stage 1 is officially live! Early investors can acquire $WLOTUS at $0.01 per token prior to DEX PancakeSwap liquidity listing.",
-        date: "October 14, 2026",
+        content: "Stage 1 Public Presale is now active! Early investors receive $LOTUS tokens at $0.01 per token rate prior to DEX listing.",
+        date: "October 16, 2026",
         author: "Website Owner",
-        likes: 24,
+        likes: 38,
         comments: [
-          { author: "CryptoTrader_99", text: "Excited for this presale! Joined stage 1." },
-          { author: "Rahul_Mumbai", text: "Great roadmap. When is DEX listing?" }
+          { author: "CryptoInvestor_In", text: "Invested via UPI, got my LOTUS tokens instantly!" },
+          { author: "Rahul_Mumbai", text: "Great UI and transaction transparency." }
         ]
       },
       {
         id: 2,
-        title: "BEP-20 Smart Wrapper Contract Audit Passed",
+        title: "BEP-20 Smart Contract Passed Security Audit",
         category: "DEVELOPMENT",
-        content: "The WLOTUS smart contract has successfully passed multi-stage automated security checks with emergency Pausable and Blacklist security logic.",
-        date: "October 10, 2026",
+        content: "The Lotus Coin smart contract has completed automated security verification on BNB Smart Chain testnet.",
+        date: "October 12, 2026",
         author: "Website Owner",
-        likes: 18,
+        likes: 29,
         comments: [
-          { author: "Alex_Web3", text: "Security audit passed is a huge positive sign!" }
+          { author: "Alex_Web3", text: "Verified contract address is a solid sign." }
         ]
       }
     ];
@@ -954,16 +1126,59 @@
       localStorage.setItem('lotus_users_db', JSON.stringify(usersArr));
     }
 
-    function getStoredBlogs() {
-      const blogs = localStorage.getItem('lotus_blogs_db');
-      return blogs ? JSON.parse(blogs) : defaultBlogs;
+    function getStoredNews() {
+      const news = localStorage.getItem('lotus_news_db');
+      return news ? JSON.parse(news) : defaultNews;
     }
-    function saveStoredBlogs(blogsArr) {
-      localStorage.setItem('lotus_blogs_db', JSON.stringify(blogsArr));
+    function saveStoredNews(newsArr) {
+      localStorage.setItem('lotus_news_db', JSON.stringify(newsArr));
     }
 
+    function getStoredTransactions() {
+      const activeUserJson = localStorage.getItem('lotus_active_session');
+      if (!activeUserJson) return [];
+      const user = JSON.parse(activeUserJson);
+      const key = 'lotus_txs_' + user.email;
+      const txs = localStorage.getItem(key);
+      return txs ? JSON.parse(txs) : [];
+    }
+
+    function recordTransaction(txObj) {
+      const activeUserJson = localStorage.getItem('lotus_active_session');
+      if (!activeUserJson) return;
+      const user = JSON.parse(activeUserJson);
+      const key = 'lotus_txs_' + user.email;
+      const txs = getStoredTransactions();
+      txs.unshift(txObj);
+      localStorage.setItem(key, JSON.stringify(txs));
+      renderTransactions();
+    }
+
+    function renderTransactions() {
+      const container = document.getElementById('txHistoryContainer');
+      const txs = getStoredTransactions();
+
+      if (!txs || txs.length === 0) {
+        container.innerHTML = '<p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">No transactions yet. Complete a purchase above to see your transaction record.</p>';
+        return;
+      }
+
+      let html = '<table class="tx-table"><thead><tr><th>Tx Hash</th><th>Amount</th><th>Tokens</th><th>Status</th></tr></thead><tbody>';
+      txs.forEach(function(tx) {
+        html += '<tr><td style="color:var(--neon-cyan);">' + tx.hash + '</td><td style="color:white;">$' + tx.usdt + '</td><td style="color:var(--neon-green);">+' + tx.tokens.toLocaleString() + '</td><td style="color:var(--neon-green);">SUCCESS</td></tr>';
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // Modal Close on Outside Backdrop Click
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+      }
+    };
+
     function openAuthModal(mode) {
-      console.log('openAuthModal called with:', mode);
       const modal = document.getElementById('authModal');
       if (modal) {
         modal.style.display = 'flex';
@@ -1038,6 +1253,34 @@
       closeAuthModal();
     }
 
+    function loginAsGuestQuick() {
+      const guestUser = { name: "Guest_Investor", email: "guest@lotus.net", password: "guest", tokens: 1000, investedUsdt: 10 };
+      localStorage.setItem('lotus_active_session', JSON.stringify(guestUser));
+      checkUserSession();
+      closeAuthModal();
+      alert("Logged in as Guest Investor!");
+    }
+
+    async function loginWithMetaMaskQuick() {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          const addr = accounts[0];
+          const shortAddr = addr.substring(0, 6) + "..." + addr.substring(addr.length - 4);
+          const walletUser = { name: "Web3_" + shortAddr, email: addr.toLowerCase() + "@wallet.eth", password: "web3", tokens: 5000, investedUsdt: 50 };
+          localStorage.setItem('lotus_active_session', JSON.stringify(walletUser));
+          checkUserSession();
+          closeAuthModal();
+          alert("Successfully authenticated via MetaMask: " + shortAddr);
+        } catch (e) {
+          alert("MetaMask connection failed or rejected.");
+        }
+      } else {
+        alert("MetaMask extension not found in your browser! Using Guest account instead.");
+        loginAsGuestQuick();
+      }
+    }
+
     function checkUserSession() {
       const activeUserJson = localStorage.getItem('lotus_active_session');
       if (activeUserJson) {
@@ -1046,13 +1289,15 @@
         document.getElementById('userProfileBadge').style.display = 'inline-flex';
         document.getElementById('loggedUserName').innerText = user.name;
 
-        document.getElementById('wlotusBalance').innerText = ((user.tokens || 0).toLocaleString()) + " WLOTUS";
+        document.getElementById('wlotusBalance').innerText = ((user.tokens || 0).toLocaleString()) + " LOTUS";
         document.getElementById('portfolioValText').innerText = "$" + (((user.tokens || 0) * 0.0524).toFixed(2)) + " USDT";
+        renderTransactions();
       } else {
         document.getElementById('authButtonsGroup').style.display = 'flex';
         document.getElementById('userProfileBadge').style.display = 'none';
-        document.getElementById('wlotusBalance').innerText = '0.00 WLOTUS';
+        document.getElementById('wlotusBalance').innerText = '0.00 LOTUS';
         document.getElementById('portfolioValText').innerText = '$0.00 USDT';
+        document.getElementById('txHistoryContainer').innerHTML = '<p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Please Login to view your transaction history.</p>';
       }
     }
     window.addEventListener('DOMContentLoaded', checkUserSession);
@@ -1063,33 +1308,34 @@
       alert('Logged out successfully.');
     }
 
-    function openOwnerBlogModal() {
-      const modal = document.getElementById('ownerBlogModal');
+    // Owner News Post System
+    function openOwnerNewsModal() {
+      const modal = document.getElementById('ownerNewsModal');
       if (modal) modal.style.display = 'flex';
     }
-    function closeOwnerBlogModal() {
-      const modal = document.getElementById('ownerBlogModal');
+    function closeOwnerNewsModal() {
+      const modal = document.getElementById('ownerNewsModal');
       if (modal) modal.style.display = 'none';
     }
 
-    function publishOwnerPost() {
+    function publishOwnerNews() {
       const pass = document.getElementById('ownerPasscode').value;
-      const title = document.getElementById('blogTitleInput').value.trim();
-      const category = document.getElementById('blogCategoryInput').value;
-      const content = document.getElementById('blogContentInput').value.trim();
+      const title = document.getElementById('newsTitleInput').value.trim();
+      const category = document.getElementById('newsCategoryInput').value;
+      const content = document.getElementById('newsContentInput').value.trim();
 
       if (pass !== 'lotus123' && pass !== 'admin') {
-        alert("ACCESS DENIED: Only Website Owner with valid passcode can publish blog posts!");
+        alert("ACCESS DENIED: Only Website Owner with valid passcode can publish news!");
         return;
       }
 
       if (!title || !content) {
-        alert("Please provide both title and content for the post!");
+        alert("Please provide both headline and content for the news!");
         return;
       }
 
-      const blogs = getStoredBlogs();
-      const newPost = {
+      const newsList = getStoredNews();
+      const newArticle = {
         id: Date.now(),
         title: title,
         category: category,
@@ -1100,67 +1346,67 @@
         comments: []
       };
 
-      blogs.unshift(newPost);
-      saveStoredBlogs(blogs);
-      renderBlogPosts();
-      closeOwnerBlogModal();
-      alert("Official Blog Post published live by Website Owner!");
+      newsList.unshift(newArticle);
+      saveStoredNews(newsList);
+      renderNewsPosts();
+      closeOwnerNewsModal();
+      alert("Official News Article published live by Website Owner!");
     }
 
-    function likePost(blogId) {
-      const blogs = getStoredBlogs();
-      const idx = blogs.findIndex(function(b) { return b.id === blogId; });
+    function likeNews(newsId) {
+      const newsList = getStoredNews();
+      const idx = newsList.findIndex(function(n) { return n.id === newsId; });
       if (idx !== -1) {
-        blogs[idx].likes = (blogs[idx].likes || 0) + 1;
-        saveStoredBlogs(blogs);
-        renderBlogPosts();
+        newsList[idx].likes = (newsList[idx].likes || 0) + 1;
+        saveStoredNews(newsList);
+        renderNewsPosts();
       }
     }
 
-    function addComment(blogId) {
-      const inputElem = document.getElementById('comment_input_' + blogId);
+    function addComment(newsId) {
+      const inputElem = document.getElementById('comment_input_' + newsId);
       const commentText = inputElem.value.trim();
       if (!commentText) return;
 
       const activeUserJson = localStorage.getItem('lotus_active_session');
-      const authorName = activeUserJson ? JSON.parse(activeUserJson).name : "Guest_Trader";
+      const authorName = activeUserJson ? JSON.parse(activeUserJson).name : "Guest_Investor";
 
-      const blogs = getStoredBlogs();
-      const idx = blogs.findIndex(function(b) { return b.id === blogId; });
+      const newsList = getStoredNews();
+      const idx = newsList.findIndex(function(n) { return n.id === newsId; });
       if (idx !== -1) {
-        if (!blogs[idx].comments) blogs[idx].comments = [];
-        blogs[idx].comments.push({ author: authorName, text: commentText });
-        saveStoredBlogs(blogs);
-        renderBlogPosts();
+        if (!newsList[idx].comments) newsList[idx].comments = [];
+        newsList[idx].comments.push({ author: authorName, text: commentText });
+        saveStoredNews(newsList);
+        renderNewsPosts();
       }
     }
 
-    function renderBlogPosts() {
-      const blogs = getStoredBlogs();
-      const container = document.getElementById('blogGridContainer');
+    function renderNewsPosts() {
+      const newsList = getStoredNews();
+      const container = document.getElementById('newsGridContainer');
       if (!container) return;
       container.innerHTML = '';
 
-      blogs.forEach(function(b) {
+      newsList.forEach(function(n) {
         let commentsHtml = '';
-        if (b.comments && b.comments.length > 0) {
-          b.comments.forEach(function(c) {
+        if (n.comments && n.comments.length > 0) {
+          n.comments.forEach(function(c) {
             commentsHtml += '<div class="comment-item"><span class="comment-author">' + c.author + ':</span> ' + c.text + '</div>';
           });
         } else {
           commentsHtml = '<div style="font-size:0.75rem; color:var(--text-muted);">No comments yet. Be the first to comment!</div>';
         }
 
-        container.innerHTML += '<div class="blog-card"><div><span class="blog-tag">' + b.category + '</span><h4>' + b.title + '</h4><p>' + b.content + '</p></div><div><div class="blog-meta"><span><i class="fa-solid fa-crown" style="color:var(--gold);"></i> ' + b.author + '</span><span><i class="fa-solid fa-calendar"></i> ' + b.date + '</span></div><div class="blog-actions"><button class="btn-like" onclick="likePost(' + b.id + ')">❤️ Like <span class="like-count">(' + (b.likes || 0) + ')</span></button><span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-comments"></i> ' + (b.comments ? b.comments.length : 0) + ' Comments</span></div><div class="comments-wrapper"><div style="font-size:0.78rem; font-weight:bold; margin-bottom:6px; color:var(--text-main);">Comments</div><div>' + commentsHtml + '</div><div class="comment-input-box"><input type="text" id="comment_input_' + b.id + '" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') addComment(' + b.id + ')"><button class="btn btn-auth" style="padding:4px 10px; font-size:0.75rem;" onclick="addComment(' + b.id + ')">Post</button></div></div></div></div>';
+        container.innerHTML += '<div class="news-card"><div><span class="news-tag">' + n.category + '</span><h4>' + n.title + '</h4><p>' + n.content + '</p></div><div><div class="news-meta"><span><i class="fa-solid fa-crown" style="color:var(--gold);"></i> ' + n.author + '</span><span><i class="fa-solid fa-calendar"></i> ' + n.date + '</span></div><div class="news-actions"><button class="btn-like" onclick="likeNews(' + n.id + ')">❤️ Like <span class="like-count">(' + (n.likes || 0) + ')</span></button><span style="font-size:0.8rem; color:var(--text-muted);"><i class="fa-solid fa-comments"></i> ' + (n.comments ? n.comments.length : 0) + ' Comments</span></div><div class="comments-wrapper"><div style="font-size:0.78rem; font-weight:bold; margin-bottom:6px; color:var(--text-main);">Comments</div><div>' + commentsHtml + '</div><div class="comment-input-box"><input type="text" id="comment_input_' + n.id + '" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') addComment(' + n.id + ')"><button class="btn btn-auth" style="padding:4px 10px; font-size:0.75rem;" onclick="addComment(' + n.id + ')">Post</button></div></div></div></div>';
       });
     }
-    window.addEventListener('DOMContentLoaded', renderBlogPosts);
+    window.addEventListener('DOMContentLoaded', renderNewsPosts);
 
     function calculatePresale() {
       const usdt = document.getElementById('usdtInput').value;
       const rate = 100;
       if (usdt && usdt > 0) {
-        document.getElementById('lotusOutput').value = (usdt * rate).toLocaleString() + " WLOTUS";
+        document.getElementById('lotusOutput').value = (usdt * rate).toLocaleString() + " LOTUS";
       } else {
         document.getElementById('lotusOutput').value = '';
       }
@@ -1169,7 +1415,7 @@
     function executeBuyOrder() {
       const activeUserJson = localStorage.getItem('lotus_active_session');
       if (!activeUserJson) {
-        alert("Please Sign Up or Login first to execute your buy order!");
+        alert("Please Sign Up or Login first to execute your Lotus Coin investment!");
         openAuthModal('login');
         return;
       }
@@ -1195,8 +1441,67 @@
         saveStoredUsers(users);
       }
 
+      // Record transaction
+      const txHash = '0x' + Math.random().toString(16).substring(2, 10) + '...' + Math.random().toString(16).substring(2, 6);
+      recordTransaction({ hash: txHash, usdt: usdt, tokens: newTokens, time: new Date().toLocaleTimeString() });
+
       checkUserSession();
-      alert("Buy Order Executed! Added: " + newTokens.toLocaleString() + " WLOTUS. New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
+      showTxReceipt(txHash, usdt + ' USDT', newTokens.toLocaleString() + ' LOTUS');
+    }
+
+    function updateModalTokenCalc() {
+      const amt = parseFloat(document.getElementById('modalPayUsdt').value) || 0;
+      const tokens = amt * 100;
+      document.getElementById('modalCalculatedTokens').innerText = 'You will receive: ' + tokens.toLocaleString() + ' $LOTUS';
+    }
+
+    function processModalPayment() {
+      const activeUserJson = localStorage.getItem('lotus_active_session');
+      if (!activeUserJson) {
+        alert("Please Sign Up or Login first to complete your purchase!");
+        closeBuyModal();
+        openAuthModal('login');
+        return;
+      }
+
+      const usdt = parseFloat(document.getElementById('modalPayUsdt').value);
+      if (!usdt || usdt <= 0) {
+        alert("Please enter a valid payment amount!");
+        return;
+      }
+
+      const newTokens = usdt * 100;
+      let activeUser = JSON.parse(activeUserJson);
+      
+      activeUser.tokens = (activeUser.tokens || 0) + newTokens;
+      activeUser.investedUsdt = (activeUser.investedUsdt || 0) + usdt;
+
+      localStorage.setItem('lotus_active_session', JSON.stringify(activeUser));
+      
+      let users = getStoredUsers();
+      const uIdx = users.findIndex(function(u) { return u.email === activeUser.email; });
+      if (uIdx !== -1) {
+        users[uIdx] = activeUser;
+        saveStoredUsers(users);
+      }
+
+      const txHash = '0x' + Math.random().toString(16).substring(2, 10) + '...' + Math.random().toString(16).substring(2, 6);
+      recordTransaction({ hash: txHash, usdt: usdt, tokens: newTokens, time: new Date().toLocaleTimeString() });
+
+      closeBuyModal();
+      checkUserSession();
+      showTxReceipt(txHash, usdt + ' USDT', newTokens.toLocaleString() + ' LOTUS');
+    }
+
+    function showTxReceipt(hash, paidStr, tokenStr) {
+      document.getElementById('receiptTxHash').innerText = hash;
+      document.getElementById('receiptPaidAmt').innerText = paidStr;
+      document.getElementById('receiptTokensCredited').innerText = tokenStr;
+      document.getElementById('txReceiptModal').style.display = 'flex';
+    }
+
+    function closeTxReceiptModal() {
+      document.getElementById('txReceiptModal').style.display = 'none';
     }
 
     function copyContractAddress() {
@@ -1235,6 +1540,6 @@
         } catch (error) { alert("Wallet connection failed!"); }
       } else { alert("MetaMask extension not found!"); }
     }
-</script>
+  </script>
 </body>
 </html>
