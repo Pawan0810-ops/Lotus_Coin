@@ -823,7 +823,6 @@
 
     let provider, signer, contract, userAddress, lotusChartInstance;
 
-    // 1. PURE DEDICATED LOTUS COIN CANDLESTICK CHART DATA
     const timeframeData = {
       '1m': {
         labels: ['00:01', '00:02', '00:03', '00:04', '00:05', '00:06', '00:07', '00:08', '00:09', '00:10'],
@@ -919,7 +918,6 @@
 
     window.addEventListener('DOMContentLoaded', function() { initLotusChart('15m'); });
 
-    // Default Seed Blog Posts
     const defaultBlogs = [
       {
         id: 1,
@@ -964,13 +962,19 @@
       localStorage.setItem('lotus_blogs_db', JSON.stringify(blogsArr));
     }
 
-    // User Auth Logic (Registration & Login)
     function openAuthModal(mode) {
-      document.getElementById('authModal').style.display = 'flex';
-      document.getElementById('authErrorMsg').style.display = 'none';
-      switchAuthTab(mode);
+      console.log('openAuthModal called with:', mode);
+      const modal = document.getElementById('authModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.getElementById('authErrorMsg').style.display = 'none';
+        switchAuthTab(mode);
+      }
     }
-    function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+    function closeAuthModal() {
+      const modal = document.getElementById('authModal');
+      if (modal) modal.style.display = 'none';
+    }
     
     function switchAuthTab(mode) {
       document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
@@ -1006,7 +1010,7 @@
       localStorage.setItem('lotus_active_session', JSON.stringify(newUser));
       checkUserSession();
       closeAuthModal();
-      alert("🎉 Registration Successful! Welcome " + name + ".");
+      alert("Registration Successful! Welcome " + name + ".");
     }
 
     function handleLogin() {
@@ -1059,9 +1063,14 @@
       alert('Logged out successfully.');
     }
 
-    // Owner Blog Post System
-    function openOwnerBlogModal() { document.getElementById('ownerBlogModal').style.display = 'flex'; }
-    function closeOwnerBlogModal() { document.getElementById('ownerBlogModal').style.display = 'none'; }
+    function openOwnerBlogModal() {
+      const modal = document.getElementById('ownerBlogModal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeOwnerBlogModal() {
+      const modal = document.getElementById('ownerBlogModal');
+      if (modal) modal.style.display = 'none';
+    }
 
     function publishOwnerPost() {
       const pass = document.getElementById('ownerPasscode').value;
@@ -1070,7 +1079,7 @@
       const content = document.getElementById('blogContentInput').value.trim();
 
       if (pass !== 'lotus123' && pass !== 'admin') {
-        alert("⛔ ACCESS DENIED: Only Website Owner with valid passcode can publish blog posts!");
+        alert("ACCESS DENIED: Only Website Owner with valid passcode can publish blog posts!");
         return;
       }
 
@@ -1095,7 +1104,7 @@
       saveStoredBlogs(blogs);
       renderBlogPosts();
       closeOwnerBlogModal();
-      alert("🚀 Official Blog Post published live by Website Owner!");
+      alert("Official Blog Post published live by Website Owner!");
     }
 
     function likePost(blogId) {
@@ -1129,6 +1138,7 @@
     function renderBlogPosts() {
       const blogs = getStoredBlogs();
       const container = document.getElementById('blogGridContainer');
+      if (!container) return;
       container.innerHTML = '';
 
       blogs.forEach(function(b) {
@@ -1146,7 +1156,6 @@
     }
     window.addEventListener('DOMContentLoaded', renderBlogPosts);
 
-    // Presale Calculator
     function calculatePresale() {
       const usdt = document.getElementById('usdtInput').value;
       const rate = 100;
@@ -1187,21 +1196,22 @@
       }
 
       checkUserSession();
-      alert("🎉 Buy Order Executed!
-
-Added: " + newTokens.toLocaleString() + " WLOTUS
-New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
+      alert("Buy Order Executed! Added: " + newTokens.toLocaleString() + " WLOTUS. New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
     }
 
     function copyContractAddress() {
       navigator.clipboard.writeText(CONTRACT_ADDRESS);
-      alert("Smart Contract Address copied to clipboard:
-" + CONTRACT_ADDRESS);
+      alert("Smart Contract Address copied to clipboard: " + CONTRACT_ADDRESS);
     }
 
-    // Modal Control Helpers
-    function openBuyModal() { document.getElementById('buyModal').style.display = 'flex'; }
-    function closeBuyModal() { document.getElementById('buyModal').style.display = 'none'; }
+    function openBuyModal() {
+      const modal = document.getElementById('buyModal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeBuyModal() {
+      const modal = document.getElementById('buyModal');
+      if (modal) modal.style.display = 'none';
+    }
     function selectTab(btn, tabName) {
       document.querySelectorAll('#buyModal .auth-tab-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
@@ -1210,7 +1220,6 @@ New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
       document.getElementById('paypalTab').style.display = tabName === 'paypal' ? 'block' : 'none';
     }
 
-    // Web3 Wallet Connect
     async function connectWallet() {
       if (window.ethereum) {
         try {
@@ -1226,6 +1235,6 @@ New Total: " + activeUser.tokens.toLocaleString() + " WLOTUS");
         } catch (error) { alert("Wallet connection failed!"); }
       } else { alert("MetaMask extension not found!"); }
     }
-  </script>
+</script>
 </body>
 </html>
